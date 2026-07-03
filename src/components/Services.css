@@ -1,0 +1,13 @@
+.mc-svc-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 30px 28px;
+  background: var(--card);
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+}
+
+.mc-svc-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow);
+}

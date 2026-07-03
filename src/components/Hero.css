@@ -1,0 +1,43 @@
+/* CTA primario del hero (base + hover; movido de inline por style-hover) */
+.mc-hero-cta-primary {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 26px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, var(--g1), var(--g2));
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.02rem;
+  box-shadow: 0 16px 38px -14px rgba(34, 211, 238, 0.8);
+  transition: transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 0.25s;
+  will-change: transform;
+}
+.mc-hero-cta-primary:hover {
+  box-shadow: 0 22px 48px -14px rgba(34, 211, 238, 0.98);
+}
+
+/* CTA secundario del hero (base + hover; movido de inline por style-hover) */
+.mc-hero-cta-secondary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 15px 24px;
+  border-radius: 13px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.02rem;
+  transition: transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1), border-color 0.2s, background 0.2s;
+  will-change: transform;
+}
+.mc-hero-cta-secondary:hover {
+  border-color: var(--accent);
+  background: var(--surface-2);
+}

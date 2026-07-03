@@ -1,0 +1,36 @@
+.mc-foot-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  transition: color 0.2s, border-color 0.2s;
+}
+.mc-foot-social:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.mc-foot-link {
+  font-size: 0.92rem;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.mc-foot-link:hover {
+  color: var(--accent);
+}
+
+.mc-foot-privacy {
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.mc-foot-privacy:hover {
+  color: var(--accent);
+}

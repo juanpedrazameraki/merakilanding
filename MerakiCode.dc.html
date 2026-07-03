@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    a{-webkit-tap-highlight-color:transparent}
+    button{font-family:inherit}
+    :root[data-theme="dark"]{--g1:#2563EB;--g2:#22D3EE;--bg:#0A0A0F;--bg-soft:#0B1120;--text:#E7EBF3;--muted:#9AA6BC;--dim:#6B7688;--surface:rgba(255,255,255,.04);--surface-2:rgba(255,255,255,.06);--border:rgba(255,255,255,.09);--border-strong:rgba(255,255,255,.17);--primary:#3B82F6;--accent:#22D3EE;--grid:rgba(255,255,255,.05);--glow-1:rgba(37,99,235,.40);--glow-2:rgba(34,211,238,.24);--card:rgba(255,255,255,.028);--shadow:0 26px 64px -30px rgba(0,0,0,.8);--nav-bg:rgba(9,10,16,.62)}
+    :root[data-theme="light"]{--g1:#2563EB;--g2:#22D3EE;--bg:#FFFFFF;--bg-soft:#F4F7FC;--text:#0B1220;--muted:#4A5568;--dim:#7A8699;--surface:rgba(2,6,23,.025);--surface-2:rgba(2,6,23,.045);--border:rgba(2,6,23,.09);--border-strong:rgba(2,6,23,.17);--primary:#2563EB;--accent:#0E93B0;--grid:rgba(2,6,23,.05);--glow-1:rgba(37,99,235,.16);--glow-2:rgba(34,211,238,.15);--card:#FFFFFF;--shadow:0 22px 46px -28px rgba(2,6,23,.30);--nav-bg:rgba(255,255,255,.74)}
+    .mc-stage,.mc-darksec{--card:#0E1420;--surface:rgba(255,255,255,.05);--surface-2:rgba(255,255,255,.1);--border:rgba(255,255,255,.1);--border-strong:rgba(255,255,255,.18);--nav-bg:rgba(14,20,32,.92);--text:#E7EBF3;--muted:#9AA6BC;--dim:#8892a3;--shadow:0 26px 64px -30px rgba(0,0,0,.7)}
+    .mc-darksec{background:radial-gradient(60% 55% at 50% 42%,rgba(37,99,235,.16),transparent 68%),radial-gradient(46% 40% at 50% 46%,rgba(34,211,238,.1),transparent 70%),#090D16 !important;border-color:rgba(255,255,255,.08) !important}
+    @keyframes mc-fl1{0%,100%{transform:translate(0,0)}50%{transform:translate(6px,-14px)}}
+    @keyframes mc-fl2{0%,100%{transform:translate(0,0)}50%{transform:translate(-9px,-9px)}}
+    @keyframes mc-fl3{0%,100%{transform:translate(0,0)}33%{transform:translate(8px,7px)}66%{transform:translate(-6px,-11px)}}
+    @keyframes mc-spin{to{transform:rotate(360deg)}}
+    @keyframes mc-spin-rev{to{transform:rotate(-360deg)}}
+    @keyframes mc-lineflow{to{stroke-dashoffset:-24}}
+    .mc-tech .mc-cap{transition:transform .32s cubic-bezier(.22,.61,.36,1),box-shadow .32s ease,border-color .32s ease,background .32s ease,opacity .32s ease}
+    .mc-tech .mc-ico{transition:color .32s ease,filter .32s ease}
+    .mc-tech .mc-lbl{opacity:0;transform:translate(-50%,5px);transition:opacity .26s ease,transform .26s ease;pointer-events:none}
+    .mc-tech:hover,.mc-tech:focus-visible{z-index:30;outline:none}
+    .mc-tech:hover .mc-cap,.mc-tech:focus-visible .mc-cap{transform:scale(1.14);opacity:1;border-color:var(--accent);background:rgba(34,211,238,.09);box-shadow:0 0 0 1px rgba(34,211,238,.5),0 16px 38px -10px rgba(34,211,238,.55)}
+    .mc-tech:hover .mc-ico,.mc-tech:focus-visible .mc-ico{color:var(--brand);filter:drop-shadow(0 0 9px rgba(34,211,238,.55))}
+    .mc-tech:hover .mc-lbl,.mc-tech:focus-visible .mc-lbl{opacity:1;transform:translate(-50%,0)}
+    .mc-tech:hover .mc-blur,.mc-tech:focus-visible .mc-blur{filter:none !important;opacity:1 !important}
+    @media (max-width:880px){.mc-stackcenter{position:static !important;transform:none !important;width:100% !important;margin:0 auto 32px !important}}
+    @keyframes mc-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+    @keyframes mc-pulse{0%,100%{opacity:.45}50%{opacity:1}}
+    @keyframes mc-grow{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
+    @keyframes mc-blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+    @keyframes mc-spin{to{transform:rotate(360deg)}}
+    @keyframes mc-progress{to{width:100%}}
+    @keyframes mc-flow{to{stroke-dashoffset:-160}}
+    @keyframes mc-breathe{0%,100%{transform:scaleY(.68)}50%{transform:scaleY(1)}}
+    @keyframes mc-rise{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+    @keyframes mc-glowpulse{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.32)}50%{box-shadow:0 0 22px 2px rgba(52,211,153,.26)}}
+    @keyframes mc-drift{0%{transform:translate(0,0)}33%{transform:translate(10px,-14px)}66%{transform:translate(-8px,-7px)}100%{transform:translate(0,0)}}
+    ::selection{background:rgba(34,211,238,.28);color:inherit}
+    :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+    @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none !important}}
+  </style>
+  <script>
+    (function(){try{
+      var s=localStorage.getItem('merakicode-theme');
+      var d=(s==='light'||s==='dark')?s:((window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light');
+      document.documentElement.setAttribute('data-theme',d);
+      var l=localStorage.getItem('merakicode-lang');
+      var lang=(l==='es'||l==='en')?l:(((navigator.language||'').toLowerCase().indexOf('en')===0)?'en':'es');
+      document.documentElement.setAttribute('lang',lang);
+    }catch(e){document.documentElement.setAttribute('data-theme','dark');}})();
+  </script>
+</helmet>
+
+<div style="min-height:100vh;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;position:relative;">
+
+  <nav ref="{{ navRef }}" aria-label="MerakiCode" style="position:sticky;top:0;z-index:70;border-bottom:1px solid transparent;transition:background .3s ease,box-shadow .3s ease,border-color .3s ease;">
+    <div style="max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,24px);height:66px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <a href="#hero" aria-label="MerakiCode — inicio" style="display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--text);font-weight:800;font-size:1.18rem;letter-spacing:-.02em;">
+        <span aria-hidden="true" style="display:inline-flex;width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--g1),var(--g2));align-items:center;justify-content:center;color:#fff;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1rem;box-shadow:0 8px 20px -7px rgba(34,211,238,.7);">M</span>
+        <span>Meraki<span style="color:var(--accent)">Code</span></span>
+      </a>
+
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:center;gap:2px;">
+          <a href="#services" style="padding:8px 12px;border-radius:9px;color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;transition:color .2s,background .2s;" style-hover="color:var(--text);background:var(--surface)">{{ T.nav.services }}</a>
+          <a href="#process" style="padding:8px 12px;border-radius:9px;color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;transition:color .2s,background .2s;" style-hover="color:var(--text);background:var(--surface)">{{ T.nav.process }}</a>
+          <a href="#portfolio" style="padding:8px 12px;border-radius:9px;color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;transition:color .2s,background .2s;" style-hover="color:var(--text);background:var(--surface)">{{ T.nav.portfolio }}</a>
+          <a href="#pricing" style="padding:8px 12px;border-radius:9px;color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;transition:color .2s,background .2s;" style-hover="color:var(--text);background:var(--surface)">{{ T.nav.pricing }}</a>
+          <a href="#about" style="padding:8px 12px;border-radius:9px;color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;transition:color .2s,background .2s;" style-hover="color:var(--text);background:var(--surface)">{{ T.nav.about }}</a>
+          <a href="#faq" style="padding:8px 12px;border-radius:9px;color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;transition:color .2s,background .2s;" style-hover="color:var(--text);background:var(--surface)">{{ T.nav.faq }}</a>
+        </div>
+      </sc-if>
+
+      <div style="display:flex;align-items:center;gap:9px;">
+        <div role="group" aria-label="{{ T.nav.langLabel }}" style="display:inline-flex;padding:3px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+          <button type="button" onClick="{{ setEs }}" aria-pressed="{{ isEs }}" aria-label="Español" style="{{ langEsStyle }}">ES</button>
+          <button type="button" onClick="{{ setEn }}" aria-pressed="{{ isEn }}" aria-label="English" style="{{ langEnStyle }}">EN</button>
+        </div>
+
+        <button type="button" onClick="{{ toggleTheme }}" aria-label="{{ T.nav.themeLabel }}" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;transition:all .2s;" style-hover="border-color:var(--border-strong);color:var(--accent)">
+          <sc-if value="{{ isDark }}" hint-placeholder-val="{{ true }}">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+          </sc-if>
+          <sc-if value="{{ isLight }}">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          </sc-if>
+        </button>
+
+        <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+          <a href="{{ waNav }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:10px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;text-decoration:none;font-weight:600;font-size:.92rem;box-shadow:0 8px 24px -11px rgba(34,211,238,.75);transition:transform .2s,box-shadow .2s;" style-hover="transform:translateY(-1px);box-shadow:0 12px 30px -10px rgba(34,211,238,.9)">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M19.05 4.91A9.82 9.82 0 0 0 12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.02zm-7.01 15.24a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 1 1 15.2-4.38c0 4.54-3.7 8.24-8.24 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.38-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.13-.14.17-.25.25-.41.08-.16.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.16 0-.43.06-.65.31-.22.25-.85.83-.85 2.03 0 1.2.87 2.36.99 2.52.12.16 1.71 2.61 4.15 3.66.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29z"></path></svg>
+            {{ T.nav.cta }}
+          </a>
+        </sc-if>
+
+        <sc-if value="{{ isMobile }}">
+          <button type="button" onClick="{{ toggleMenu }}" aria-label="{{ T.nav.menu }}" aria-expanded="{{ menuOpen }}" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;">
+            <sc-if value="{{ menuOpen }}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"></path></svg></sc-if>
+            <sc-if value="{{ menuClosed }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></sc-if>
+          </button>
+        </sc-if>
+      </div>
+    </div>
+
+    <sc-if value="{{ menuOpen }}">
+      <div style="border-top:1px solid var(--border);background:var(--nav-bg);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);padding:14px clamp(16px,4vw,24px) 20px;display:flex;flex-direction:column;gap:4px;">
+        <a href="#services" onClick="{{ closeMenu }}" style="padding:12px 8px;border-radius:9px;color:var(--text);text-decoration:none;font-size:1rem;font-weight:500;border-bottom:1px solid var(--border);">{{ T.nav.services }}</a>
+        <a href="#process" onClick="{{ closeMenu }}" style="padding:12px 8px;border-radius:9px;color:var(--text);text-decoration:none;font-size:1rem;font-weight:500;border-bottom:1px solid var(--border);">{{ T.nav.process }}</a>
+        <a href="#portfolio" onClick="{{ closeMenu }}" style="padding:12px 8px;border-radius:9px;color:var(--text);text-decoration:none;font-size:1rem;font-weight:500;border-bottom:1px solid var(--border);">{{ T.nav.portfolio }}</a>
+        <a href="#pricing" onClick="{{ closeMenu }}" style="padding:12px 8px;border-radius:9px;color:var(--text);text-decoration:none;font-size:1rem;font-weight:500;border-bottom:1px solid var(--border);">{{ T.nav.pricing }}</a>
+        <a href="#about" onClick="{{ closeMenu }}" style="padding:12px 8px;border-radius:9px;color:var(--text);text-decoration:none;font-size:1rem;font-weight:500;border-bottom:1px solid var(--border);">{{ T.nav.about }}</a>
+        <a href="#faq" onClick="{{ closeMenu }}" style="padding:12px 8px;border-radius:9px;color:var(--text);text-decoration:none;font-size:1rem;font-weight:500;border-bottom:1px solid var(--border);">{{ T.nav.faq }}</a>
+        <a href="#contact" onClick="{{ closeMenu }}" style="padding:12px 8px;border-radius:9px;color:var(--text);text-decoration:none;font-size:1rem;font-weight:500;">{{ T.nav.contact }}</a>
+        <a href="{{ waNav }}" target="_blank" rel="noopener" onClick="{{ closeMenu }}" style="margin-top:8px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 16px;border-radius:11px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;text-decoration:none;font-weight:600;">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M19.05 4.91A9.82 9.82 0 0 0 12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.02zm-7.01 15.24a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 1 1 15.2-4.38c0 4.54-3.7 8.24-8.24 8.24z"></path></svg>
+          {{ T.nav.cta }}
+        </a>
+      </div>
+    </sc-if>
+  </nav>
+
+  <main>
+    <section id="hero" style="position:relative;scroll-margin-top:84px;padding:clamp(84px,13vh,140px) 0 clamp(56px,9vh,104px);overflow:hidden;">
+      <sc-if value="{{ showGlow }}" hint-placeholder-val="{{ true }}"><div aria-hidden="true" style="position:absolute;inset:0;background:radial-gradient(58% 52% at 80% 4%,var(--glow-2),transparent 60%),radial-gradient(52% 54% at 8% 22%,var(--glow-1),transparent 62%);pointer-events:none;"></div></sc-if>
+      <sc-if value="{{ showGrid }}" hint-placeholder-val="{{ true }}"><div aria-hidden="true" style="position:absolute;inset:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:48px 48px;-webkit-mask-image:radial-gradient(ellipse 78% 62% at 50% 0%,#000 18%,transparent 74%);mask-image:radial-gradient(ellipse 78% 62% at 50% 0%,#000 18%,transparent 74%);pointer-events:none;"></div></sc-if>
+      <div aria-hidden="true" style="position:absolute;left:50%;bottom:-6%;transform:translateX(-50%);width:min(1100px,118%);height:66%;background:radial-gradient(50% 60% at 50% 55%,rgba(34,211,238,.14),transparent 72%);filter:blur(28px);pointer-events:none;z-index:1;"></div>
+      <div aria-hidden="true" style="position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1;">
+        <span style="position:absolute;top:20%;left:10%;width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:.45;animation:mc-drift 15s ease-in-out infinite;"></span>
+        <span style="position:absolute;top:34%;left:84%;width:3px;height:3px;border-radius:50%;background:var(--primary);opacity:.4;animation:mc-drift 18s ease-in-out infinite 1s;"></span>
+        <span style="position:absolute;top:63%;left:16%;width:3px;height:3px;border-radius:50%;background:var(--accent);opacity:.32;animation:mc-drift 20s ease-in-out infinite 2s;"></span>
+        <span style="position:absolute;top:14%;left:52%;width:2px;height:2px;border-radius:50%;background:var(--accent);opacity:.4;animation:mc-drift 16s ease-in-out infinite .5s;"></span>
+        <span style="position:absolute;top:73%;left:70%;width:4px;height:4px;border-radius:50%;background:var(--primary);opacity:.3;animation:mc-drift 22s ease-in-out infinite 1.5s;"></span>
+        <span style="position:absolute;top:46%;left:6%;width:2px;height:2px;border-radius:50%;background:var(--accent);opacity:.4;animation:mc-drift 17s ease-in-out infinite 3s;"></span>
+        <span style="position:absolute;top:80%;left:44%;width:3px;height:3px;border-radius:50%;background:var(--accent);opacity:.3;animation:mc-drift 19s ease-in-out infinite 2.5s;"></span>
+        <span style="position:absolute;top:26%;left:32%;width:2px;height:2px;border-radius:50%;background:var(--primary);opacity:.35;animation:mc-drift 21s ease-in-out infinite 1.2s;"></span>
+      </div>
+
+      <div style="position:relative;z-index:3;max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,24px);display:flex;flex-direction:column;align-items:center;text-align:center;">
+        <div style="display:flex;flex-direction:column;align-items:center;max-width:760px;">
+          <div data-reveal style="display:inline-flex;align-items:center;gap:9px;padding:6px 13px;border:1px solid var(--border);border-radius:999px;background:var(--surface);font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.09em;color:var(--muted);margin-bottom:24px;text-transform:uppercase;">
+            <span aria-hidden="true" style="width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(34,211,238,.18);animation:mc-pulse 2.4s infinite;"></span>
+            {{ T.hero.badge }}
+          </div>
+          <h1 data-reveal data-reveal-delay="60" style="margin:0 0 22px;font-size:clamp(2.4rem,5.8vw,4.15rem);line-height:1.02;letter-spacing:-.03em;font-weight:800;max-width:15ch;text-wrap:balance;">{{ T.hero.title }}</h1>
+          <p data-reveal data-reveal-delay="120" style="margin:0 auto 34px;font-size:clamp(1.05rem,1.55vw,1.26rem);line-height:1.6;color:var(--muted);max-width:46ch;text-wrap:pretty;">{{ T.hero.subtitle }}</p>
+          <div data-reveal data-reveal-delay="180" style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;">
+            <a href="{{ waHero }}" target="_blank" rel="noopener" onMouseMove="{{ onCtaMove }}" onMouseLeave="{{ onCtaLeave }}" style="position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:13px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;text-decoration:none;font-weight:600;font-size:1.02rem;box-shadow:0 16px 38px -14px rgba(34,211,238,.8);transition:transform .25s cubic-bezier(.22,.61,.36,1),box-shadow .25s;will-change:transform;" style-hover="box-shadow:0 22px 48px -14px rgba(34,211,238,.98)"><span data-shine aria-hidden="true" style="position:absolute;inset:0;opacity:0;transition:opacity .3s;background:radial-gradient(150px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.4),transparent 60%);pointer-events:none;"></span>
+              <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M19.05 4.91A9.82 9.82 0 0 0 12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.02zm-7.01 15.24a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 1 1 15.2-4.38c0 4.54-3.7 8.24-8.24 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.38-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.13-.14.17-.25.25-.41.08-.16.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.16 0-.43.06-.65.31-.22.25-.85.83-.85 2.03 0 1.2.87 2.36.99 2.52.12.16 1.71 2.61 4.15 3.66.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29z"></path></svg>
+              {{ T.hero.ctaPrimary }}
+            </a>
+            <a href="#services" onMouseMove="{{ onCtaMove }}" onMouseLeave="{{ onCtaLeave }}" style="position:relative;display:inline-flex;align-items:center;gap:8px;padding:15px 24px;border-radius:13px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);text-decoration:none;font-weight:600;font-size:1.02rem;transition:transform .25s cubic-bezier(.22,.61,.36,1),border-color .2s,background .2s;will-change:transform;" style-hover="border-color:var(--accent);background:var(--surface-2)">
+              {{ T.hero.ctaSecondary }}
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            </a>
+          </div>
+          <p data-reveal data-reveal-delay="240" style="margin:24px 0 0;font-size:.86rem;color:var(--dim);display:inline-flex;align-items:center;gap:8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+            {{ T.hero.trust }}
+          </p>
+        </div>
+
+        <div style="position:relative;z-index:2;width:100%;margin-top:clamp(38px,6vw,64px);">{{ heroStage }}</div>
+      </div>
+    </section>
+    <section id="services" style="scroll-margin-top:84px;padding:clamp(58px,9vw,106px) 0;position:relative;">
+      <div style="max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,24px);">
+        <div data-reveal style="max-width:640px;margin-bottom:clamp(36px,5vw,56px);">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:15px;display:flex;align-items:center;gap:11px;"><span aria-hidden="true" style="width:22px;height:1px;background:var(--accent);display:inline-block;"></span>{{ T.services.eyebrow }}</div>
+          <h2 style="font-size:clamp(1.85rem,3.6vw,2.7rem);font-weight:800;letter-spacing:-.022em;line-height:1.1;margin:0 0 16px;">{{ T.services.heading }}</h2>
+          <p style="font-size:clamp(1rem,1.3vw,1.14rem);color:var(--muted);line-height:1.6;margin:0;">{{ T.services.sub }}</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:20px;">
+          <div data-reveal style="border:1px solid var(--border);border-radius:16px;padding:30px 28px;background:var(--card);transition:transform .25s,border-color .25s,box-shadow .25s;" style-hover="transform:translateY(-5px);border-color:var(--border-strong);box-shadow:var(--shadow)">
+            <div aria-hidden="true" style="width:52px;height:52px;border-radius:13px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(37,99,235,.16),rgba(34,211,238,.16));border:1px solid var(--border);color:var(--accent);margin-bottom:22px;">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="13" rx="2"></rect><path d="M8 20h8M12 17v3"></path><path d="M2.5 9h19"></path></svg>
+            </div>
+            <h3 style="font-size:1.22rem;font-weight:700;margin:0 0 10px;letter-spacing:-.01em;">{{ T.services.web.title }}</h3>
+            <p style="font-size:.98rem;color:var(--muted);line-height:1.62;margin:0;">{{ T.services.web.desc }}</p>
+          </div>
+          <div data-reveal data-reveal-delay="90" style="border:1px solid var(--border);border-radius:16px;padding:30px 28px;background:var(--card);transition:transform .25s,border-color .25s,box-shadow .25s;" style-hover="transform:translateY(-5px);border-color:var(--border-strong);box-shadow:var(--shadow)">
+            <div aria-hidden="true" style="width:52px;height:52px;border-radius:13px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(37,99,235,.16),rgba(34,211,238,.16));border:1px solid var(--border);color:var(--accent);margin-bottom:22px;">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.4"></rect><rect x="14" y="3" width="7" height="5" rx="1.4"></rect><rect x="14" y="12" width="7" height="9" rx="1.4"></rect><rect x="3" y="16" width="7" height="5" rx="1.4"></rect></svg>
+            </div>
+            <h3 style="font-size:1.22rem;font-weight:700;margin:0 0 10px;letter-spacing:-.01em;">{{ T.services.saas.title }}</h3>
+            <p style="font-size:.98rem;color:var(--muted);line-height:1.62;margin:0;">{{ T.services.saas.desc }}</p>
+          </div>
+          <div data-reveal data-reveal-delay="180" style="border:1px solid var(--border);border-radius:16px;padding:30px 28px;background:var(--card);transition:transform .25s,border-color .25s,box-shadow .25s;" style-hover="transform:translateY(-5px);border-color:var(--border-strong);box-shadow:var(--shadow)">
+            <div aria-hidden="true" style="width:52px;height:52px;border-radius:13px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(37,99,235,.16),rgba(34,211,238,.16));border:1px solid var(--border);color:var(--accent);margin-bottom:22px;">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"></rect><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"></rect><path d="M10.5 7h3.5a2 2 0 0 1 2 2v4.5"></path></svg>
+            </div>
+            <h3 style="font-size:1.22rem;font-weight:700;margin:0 0 10px;letter-spacing:-.01em;">{{ T.services.custom.title }}</h3>
+            <p style="font-size:.98rem;color:var(--muted);line-height:1.62;margin:0;">{{ T.services.custom.desc }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="process" style="scroll-margin-top:84px;padding:clamp(58px,9vw,106px) 0;position:relative;background:var(--bg-soft);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+      <div style="max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,24px);">
+        <div data-reveal style="max-width:640px;margin-bottom:clamp(36px,5vw,56px);">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:15px;display:flex;align-items:center;gap:11px;"><span aria-hidden="true" style="width:22px;height:1px;background:var(--accent);display:inline-block;"></span>{{ T.process.eyebrow }}</div>
+          <h2 style="font-size:clamp(1.85rem,3.6vw,2.7rem);font-weight:800;letter-spacing:-.022em;line-height:1.1;margin:0 0 16px;">{{ T.process.heading }}</h2>
+          <p style="font-size:clamp(1rem,1.3vw,1.14rem);color:var(--muted);line-height:1.6;margin:0;">{{ T.process.sub }}</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,236px),1fr));gap:18px;">
+          <div data-reveal style="position:relative;border:1px solid var(--border);border-radius:16px;padding:26px 24px;background:var(--card);overflow:hidden;">
+            <span aria-hidden="true" style="position:absolute;top:16px;right:20px;font-family:'JetBrains Mono',monospace;font-size:2.5rem;font-weight:700;line-height:1;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.3;">01</span>
+            <div aria-hidden="true" style="width:46px;height:46px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(37,99,235,.16),rgba(34,211,238,.16));border:1px solid var(--border);color:var(--accent);margin-bottom:20px;">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>
+            </div>
+            <h3 style="font-size:1.08rem;font-weight:700;margin:0 0 9px;letter-spacing:-.01em;">{{ T.process.s1.title }}</h3>
+            <p style="font-size:.92rem;color:var(--muted);line-height:1.6;margin:0;">{{ T.process.s1.desc }}</p>
+          </div>
+          <div data-reveal data-reveal-delay="90" style="position:relative;border:1px solid var(--border);border-radius:16px;padding:26px 24px;background:var(--card);overflow:hidden;">
+            <span aria-hidden="true" style="position:absolute;top:16px;right:20px;font-family:'JetBrains Mono',monospace;font-size:2.5rem;font-weight:700;line-height:1;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.3;">02</span>
+            <div aria-hidden="true" style="width:46px;height:46px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(37,99,235,.16),rgba(34,211,238,.16));border:1px solid var(--border);color:var(--accent);margin-bottom:20px;">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path></svg>
+            </div>
+            <h3 style="font-size:1.08rem;font-weight:700;margin:0 0 9px;letter-spacing:-.01em;">{{ T.process.s2.title }}</h3>
+            <p style="font-size:.92rem;color:var(--muted);line-height:1.6;margin:0;">{{ T.process.s2.desc }}</p>
+          </div>
+          <div data-reveal data-reveal-delay="180" style="position:relative;border:1px solid var(--border);border-radius:16px;padding:26px 24px;background:var(--card);overflow:hidden;">
+            <span aria-hidden="true" style="position:absolute;top:16px;right:20px;font-family:'JetBrains Mono',monospace;font-size:2.5rem;font-weight:700;line-height:1;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.3;">03</span>
+            <div aria-hidden="true" style="width:46px;height:46px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(37,99,235,.16),rgba(34,211,238,.16));border:1px solid var(--border);color:var(--accent);margin-bottom:20px;">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"></path></svg>
+            </div>
+            <h3 style="font-size:1.08rem;font-weight:700;margin:0 0 9px;letter-spacing:-.01em;">{{ T.process.s3.title }}</h3>
+            <p style="font-size:.92rem;color:var(--muted);line-height:1.6;margin:0;">{{ T.process.s3.desc }}</p>
+          </div>
+          <div data-reveal data-reveal-delay="270" style="position:relative;border:1px solid var(--border);border-radius:16px;padding:26px 24px;background:var(--card);overflow:hidden;">
+            <span aria-hidden="true" style="position:absolute;top:16px;right:20px;font-family:'JetBrains Mono',monospace;font-size:2.5rem;font-weight:700;line-height:1;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.3;">04</span>
+            <div aria-hidden="true" style="width:46px;height:46px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(37,99,235,.16),rgba(34,211,238,.16));border:1px solid var(--border);color:var(--accent);margin-bottom:20px;">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path></svg>
+            </div>
+            <h3 style="font-size:1.08rem;font-weight:700;margin:0 0 9px;letter-spacing:-.01em;">{{ T.process.s4.title }}</h3>
+            <p style="font-size:.92rem;color:var(--muted);line-height:1.6;margin:0;">{{ T.process.s4.desc }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="portfolio" style="scroll-margin-top:84px;padding:clamp(58px,9vw,106px) 0;position:relative;">
+      <div style="max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,24px);">
+        <div data-reveal style="max-width:640px;margin-bottom:clamp(36px,5vw,56px);">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:15px;display:flex;align-items:center;gap:11px;"><span aria-hidden="true" style="width:22px;height:1px;background:var(--accent);display:inline-block;"></span>{{ T.portfolio.eyebrow }}</div>
+          <h2 style="font-size:clamp(1.85rem,3.6vw,2.7rem);font-weight:800;letter-spacing:-.022em;line-height:1.1;margin:0 0 16px;">{{ T.portfolio.heading }}</h2>
+          <p style="font-size:clamp(1rem,1.3vw,1.14rem);color:var(--muted);line-height:1.6;margin:0;">{{ T.portfolio.sub }}</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:20px;">
+          <sc-for list="{{ T.portfolio.items }}" as="item" hint-placeholder-count="6">
+            <div data-reveal style="border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--card);transition:transform .25s,border-color .25s,box-shadow .25s;" style-hover="transform:translateY(-5px);border-color:var(--border-strong);box-shadow:var(--shadow)">
+              <div style="position:relative;aspect-ratio:16/10;background:linear-gradient(135deg,rgba(37,99,235,.30),rgba(34,211,238,.16));overflow:hidden;display:flex;align-items:center;justify-content:center;">
+                <div aria-hidden="true" style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,var(--grid) 0 1px,transparent 1px 12px);"></div>
+                <div aria-hidden="true" style="position:absolute;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(34,211,238,.45),transparent 70%);filter:blur(14px);"></div>
+                <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:relative;"><rect x="3" y="3" width="18" height="18" rx="2.5"></rect><circle cx="8.5" cy="8.5" r="1.6"></circle><path d="m21 15-5-5L5 21"></path></svg>
+                <span style="position:absolute;top:12px;left:12px;display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:rgba(10,10,16,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.16);font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.05em;color:#fff;text-transform:uppercase;">
+                  <span aria-hidden="true" style="width:6px;height:6px;border-radius:50%;background:#22D3EE;"></span>{{ T.portfolio.soon }}
+                </span>
+              </div>
+              <div style="padding:17px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                <span style="font-weight:600;font-size:1rem;letter-spacing:-.01em;">{{ item.category }}</span>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--dim)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section id="stack" class="mc-darksec" style="scroll-margin-top:84px;padding:clamp(64px,9vw,112px) 0;position:relative;overflow:hidden;background:var(--bg-soft);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+      <div aria-hidden="true" style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,#000,transparent 78%);mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,#000,transparent 78%);pointer-events:none;"></div>
+      <div style="position:relative;z-index:3;max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,24px);">
+        <div class="mc-stackwrap" style="position:relative;">
+          <div class="mc-stackcenter" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:15;width:min(460px,82%);text-align:center;pointer-events:none;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:11px;"><span aria-hidden="true" style="width:22px;height:1px;background:var(--accent);display:inline-block;"></span>{{ T.stack.eyebrow }}</div>
+            <h2 style="font-size:clamp(1.7rem,3.2vw,2.5rem);font-weight:800;letter-spacing:-.025em;line-height:1.08;margin:0 0 16px;text-wrap:balance;color:var(--text);">{{ T.stack.coreLead }}<span style="background:linear-gradient(120deg,var(--g1),var(--g2));-webkit-background-clip:text;background-clip:text;color:transparent;">{{ T.stack.coreHi }}</span></h2>
+            <p style="font-size:clamp(.96rem,1.2vw,1.08rem);color:var(--muted);line-height:1.6;margin:0 auto;max-width:38ch;text-wrap:pretty;">{{ T.stack.sub }}</p>
+          </div>
+          {{ stackViz }}
+        </div>
+      </div>
+    </section>
+    <section id="pricing" style="scroll-margin-top:84px;padding:clamp(58px,9vw,106px) 0;position:relative;">
+      <div style="max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,24px);">
+        <div data-reveal style="max-width:640px;margin:0 auto clamp(38px,5vw,56px);text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:15px;display:flex;align-items:center;justify-content:center;gap:11px;"><span aria-hidden="true" style="width:22px;height:1px;background:var(--accent);display:inline-block;"></span>{{ T.pricing.eyebrow }}</div>
+          <h2 style="font-size:clamp(1.85rem,3.6vw,2.7rem);font-weight:800;letter-spacing:-.022em;line-height:1.1;margin:0 0 16px;">{{ T.pricing.heading }}</h2>
+          <p style="font-size:clamp(1rem,1.3vw,1.14rem);color:var(--muted);line-height:1.6;margin:0;">{{ T.pricing.sub }}</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,285px),1fr));gap:20px;align-items:stretch;">
+
+          <div data-reveal style="position:relative;border:1px solid var(--border);border-radius:18px;padding:32px 28px;background:var(--card);display:flex;flex-direction:column;">
+            <h3 style="font-size:1.24rem;font-weight:700;margin:0 0 5px;">{{ T.pricing.essential.name }}</h3>
+            <p style="font-size:.9rem;color:var(--muted);margin:0 0 22px;">{{ T.pricing.essential.tag }}</p>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:4px;">{{ T.pricing.from }}</div>
+            <div style="font-size:2rem;font-weight:800;letter-spacing:-.02em;margin-bottom:24px;color:var(--text);">{{ T.pricing.essential.price }}</div>
+            <div style="height:1px;background:var(--border);margin-bottom:22px;"></div>
+            <ul style="list-style:none;margin:0 0 28px;padding:0;display:flex;flex-direction:column;gap:13px;flex:1;">
+              <sc-for list="{{ T.pricing.essential.features }}" as="feat" hint-placeholder-count="4">
+                <li style="display:flex;align-items:flex-start;gap:11px;font-size:.94rem;color:var(--muted);line-height:1.45;">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:1px;"><path d="M20 6L9 17l-5-5"></path></svg>
+                  <span>{{ feat.t }}</span>
+                </li>
+              </sc-for>
+            </ul>
+            <a href="{{ waEsencial }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 18px;border-radius:11px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);text-decoration:none;font-weight:600;font-size:.95rem;transition:border-color .2s,background .2s;" style-hover="border-color:var(--accent);background:var(--surface-2)">{{ T.pricing.essential.cta }}</a>
+          </div>
+
+          <div data-reveal data-reveal-delay="90" style="position:relative;border:1.5px solid var(--accent);border-radius:18px;padding:32px 28px;background:var(--card);display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(34,211,238,.25),0 24px 60px -30px rgba(34,211,238,.5);">
+            <span style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:6px;padding:6px 15px;border-radius:999px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;box-shadow:0 8px 20px -8px rgba(34,211,238,.8);">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="m12 2 2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17.3 5.8 20.6l1.6-6.7L2.2 8.9l6.9-.6z"></path></svg>
+              {{ T.pricing.popular }}
+            </span>
+            <h3 style="font-size:1.24rem;font-weight:700;margin:0 0 5px;">{{ T.pricing.pro.name }}</h3>
+            <p style="font-size:.9rem;color:var(--muted);margin:0 0 22px;">{{ T.pricing.pro.tag }}</p>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:4px;">{{ T.pricing.from }}</div>
+            <div style="font-size:2rem;font-weight:800;letter-spacing:-.02em;margin-bottom:24px;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;background-clip:text;color:transparent;">{{ T.pricing.pro.price }}</div>
+            <div style="height:1px;background:var(--border);margin-bottom:22px;"></div>
+            <ul style="list-style:none;margin:0 0 28px;padding:0;display:flex;flex-direction:column;gap:13px;flex:1;">
+              <sc-for list="{{ T.pricing.pro.features }}" as="feat" hint-placeholder-count="5">
+                <li style="display:flex;align-items:flex-start;gap:11px;font-size:.94rem;color:var(--muted);line-height:1.45;">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:1px;"><path d="M20 6L9 17l-5-5"></path></svg>
+                  <span>{{ feat.t }}</span>
+                </li>
+              </sc-for>
+            </ul>
+            <a href="{{ waPro }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 18px;border-radius:11px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;text-decoration:none;font-weight:600;font-size:.95rem;box-shadow:0 12px 30px -12px rgba(34,211,238,.8);transition:transform .2s,box-shadow .2s;" style-hover="transform:translateY(-2px);box-shadow:0 16px 38px -12px rgba(34,211,238,.95)">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M19.05 4.91A9.82 9.82 0 0 0 12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.02zm-7.01 15.24a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 1 1 15.2-4.38c0 4.54-3.7 8.24-8.24 8.24z"></path></svg>
+              {{ T.pricing.pro.cta }}
+            </a>
+          </div>
+
+          <div data-reveal data-reveal-delay="180" style="position:relative;border:1px solid var(--border);border-radius:18px;padding:32px 28px;background:var(--card);display:flex;flex-direction:column;">
+            <h3 style="font-size:1.24rem;font-weight:700;margin:0 0 5px;">{{ T.pricing.custom.name }}</h3>
+            <p style="font-size:.9rem;color:var(--muted);margin:0 0 22px;">{{ T.pricing.custom.tag }}</p>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:4px;">&nbsp;</div>
+            <div style="font-size:1.4rem;font-weight:800;letter-spacing:-.01em;margin-bottom:24px;color:var(--text);line-height:1.2;">{{ T.pricing.custom.price }}</div>
+            <div style="height:1px;background:var(--border);margin-bottom:22px;"></div>
+            <ul style="list-style:none;margin:0 0 28px;padding:0;display:flex;flex-direction:column;gap:13px;flex:1;">
+              <sc-for list="{{ T.pricing.custom.features }}" as="feat" hint-placeholder-count="4">
+                <li style="display:flex;align-items:flex-start;gap:11px;font-size:.94rem;color:var(--muted);line-height:1.45;">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:1px;"><path d="M20 6L9 17l-5-5"></path></svg>
+                  <span>{{ feat.t }}</span>
+                </li>
+              </sc-for>
+            </ul>
+            <a href="{{ waCustom }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 18px;border-radius:11px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);text-decoration:none;font-weight:600;font-size:.95rem;transition:border-color .2s,background .2s;" style-hover="border-color:var(--accent);background:var(--surface-2)">{{ T.pricing.custom.cta }}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" style="scroll-margin-top:84px;padding:clamp(58px,9vw,106px) 0;position:relative;background:var(--bg-soft);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+      <div style="max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,24px);">
+        <div data-reveal style="max-width:760px;margin:0 auto clamp(40px,5vw,60px);text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:15px;display:flex;align-items:center;justify-content:center;gap:11px;"><span aria-hidden="true" style="width:22px;height:1px;background:var(--accent);display:inline-block;"></span>{{ T.about.eyebrow }}</div>
+          <h2 style="font-size:clamp(1.85rem,3.6vw,2.7rem);font-weight:800;letter-spacing:-.022em;line-height:1.1;margin:0 0 20px;">{{ T.about.heading }}</h2>
+          <p style="font-size:clamp(1.05rem,1.5vw,1.24rem);color:var(--muted);line-height:1.65;margin:0;">{{ T.about.mission }}</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:18px;max-width:960px;margin:0 auto;">
+          <sc-for list="{{ T.about.team }}" as="member" hint-placeholder-count="4">
+            <div data-reveal style="border:1px solid var(--border);border-radius:16px;padding:28px 22px;background:var(--card);text-align:center;transition:transform .25s,border-color .25s;" style-hover="transform:translateY(-4px);border-color:var(--border-strong)">
+              <div aria-hidden="true" style="width:86px;height:86px;border-radius:50%;margin:0 auto 18px;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(37,99,235,.5),rgba(34,211,238,.38));border:1px solid var(--border-strong);display:flex;align-items:flex-end;justify-content:center;">
+                <div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.07) 0 1px,transparent 1px 9px);"></div>
+                <svg viewBox="0 0 24 24" width="52" height="52" fill="rgba(255,255,255,.82)" aria-hidden="true" style="position:relative;"><circle cx="12" cy="9" r="4"></circle><path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7z"></path></svg>
+              </div>
+              <div style="font-weight:700;font-size:1.02rem;margin-bottom:4px;">{{ member.name }}</div>
+              <div style="font-size:.85rem;color:var(--muted);margin-bottom:16px;line-height:1.4;">{{ member.role }}</div>
+              <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
+                <a href="#" aria-label="LinkedIn" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);transition:color .2s,border-color .2s;" style-hover="color:var(--accent);border-color:var(--accent)"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57z"></path></svg></a>
+                <a href="#" aria-label="GitHub" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);transition:color .2s,border-color .2s;" style-hover="color:var(--accent);border-color:var(--accent)"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.08.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.16.57.67.48A10 10 0 0 0 12 2z"></path></svg></a>
+                <a href="#" aria-label="X" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);transition:color .2s,border-color .2s;" style-hover="color:var(--accent);border-color:var(--accent)"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M18 3h3l-7.5 8.5L22 21h-6.4l-4.3-5.6L6 21H3l8-9.1L2 3h6.5l3.9 5.2zm-1.1 16h1.7L7.2 4.8H5.4z"></path></svg></a>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+    <section id="faq" style="scroll-margin-top:84px;padding:clamp(58px,9vw,106px) 0;position:relative;">
+      <div style="max-width:800px;margin:0 auto;padding:0 clamp(16px,4vw,24px);">
+        <div data-reveal style="text-align:center;margin-bottom:clamp(34px,5vw,50px);">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:15px;display:flex;align-items:center;justify-content:center;gap:11px;"><span aria-hidden="true" style="width:22px;height:1px;background:var(--accent);display:inline-block;"></span>{{ T.faq.eyebrow }}</div>
+          <h2 style="font-size:clamp(1.85rem,3.6vw,2.7rem);font-weight:800;letter-spacing:-.022em;line-height:1.1;margin:0;">{{ T.faq.heading }}</h2>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <sc-for list="{{ faqRows }}" as="row" hint-placeholder-count="6">
+            <div data-reveal style="border:1px solid var(--border);border-radius:14px;background:var(--card);overflow:hidden;transition:border-color .2s;" style-hover="border-color:var(--border-strong)">
+              <button type="button" onClick="{{ row.toggle }}" aria-expanded="{{ row.isOpen }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:19px 22px;background:transparent;border:0;cursor:pointer;text-align:left;color:var(--text);font-size:1.02rem;font-weight:600;font-family:inherit;line-height:1.4;">
+                <span>{{ row.q }}</span>
+                <span aria-hidden="true" style="flex-shrink:0;width:26px;height:26px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);color:var(--accent);">
+                  <sc-if value="{{ row.isOpen }}"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path></svg></sc-if>
+                  <sc-if value="{{ row.closed }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg></sc-if>
+                </span>
+              </button>
+              <sc-if value="{{ row.isOpen }}">
+                <div style="padding:0 22px 20px;color:var(--muted);font-size:.96rem;line-height:1.65;max-width:64ch;">{{ row.a }}</div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" style="scroll-margin-top:84px;padding:clamp(40px,7vw,84px) 0 clamp(58px,9vw,100px);position:relative;">
+      <div style="max-width:1120px;margin:0 auto;padding:0 clamp(16px,4vw,24px);">
+        <div data-reveal style="position:relative;border-radius:26px;overflow:hidden;border:1px solid var(--border);background:radial-gradient(120% 130% at 0% 0%,rgba(37,99,235,.24),transparent 55%),radial-gradient(120% 130% at 100% 100%,rgba(34,211,238,.20),transparent 55%),var(--card);box-shadow:var(--shadow);padding:clamp(30px,4.5vw,56px);">
+          <sc-if value="{{ showGrid }}" hint-placeholder-val="{{ true }}"><div aria-hidden="true" style="position:absolute;inset:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 0%,#000,transparent 80%);mask-image:radial-gradient(ellipse 90% 80% at 50% 0%,#000,transparent 80%);pointer-events:none;"></div></sc-if>
+          <div style="position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(30px,4vw,52px);align-items:center;">
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:15px;display:flex;align-items:center;gap:11px;"><span aria-hidden="true" style="width:22px;height:1px;background:var(--accent);display:inline-block;"></span>{{ T.contact.eyebrow }}</div>
+              <h2 style="font-size:clamp(1.9rem,3.6vw,2.8rem);font-weight:800;letter-spacing:-.022em;line-height:1.08;margin:0 0 16px;">{{ T.contact.heading }}</h2>
+              <p style="font-size:clamp(1rem,1.4vw,1.18rem);color:var(--muted);line-height:1.6;margin:0 0 30px;max-width:40ch;">{{ T.contact.sub }}</p>
+              <a href="{{ waContact }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:13px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;text-decoration:none;font-weight:600;font-size:1.02rem;box-shadow:0 16px 38px -14px rgba(34,211,238,.8);transition:transform .2s,box-shadow .2s;margin-bottom:32px;" style-hover="transform:translateY(-2px);box-shadow:0 20px 46px -14px rgba(34,211,238,.95)">
+                <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M19.05 4.91A9.82 9.82 0 0 0 12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.02zm-7.01 15.24a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 1 1 15.2-4.38c0 4.54-3.7 8.24-8.24 8.24z"></path></svg>
+                {{ T.contact.cta }}
+              </a>
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <a href="{{ waContact }}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:13px;text-decoration:none;color:var(--text);">
+                  <span aria-hidden="true" style="flex-shrink:0;width:40px;height:40px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);color:var(--accent);"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19.05 4.91A9.82 9.82 0 0 0 12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.02zm-7.01 15.24a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 1 1 15.2-4.38c0 4.54-3.7 8.24-8.24 8.24z"></path></svg></span>
+                  <span><span style="display:block;font-size:.74rem;color:var(--dim);font-family:'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;">{{ T.contact.phoneLabel }}</span><span style="font-weight:600;">442 504 1110</span></span>
+                </a>
+                <a href="mailto:contacto@merakicode.mx" style="display:flex;align-items:center;gap:13px;text-decoration:none;color:var(--text);">
+                  <span aria-hidden="true" style="flex-shrink:0;width:40px;height:40px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);color:var(--accent);"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"></rect><path d="m3.5 7 8.5 6 8.5-6"></path></svg></span>
+                  <span><span style="display:block;font-size:.74rem;color:var(--dim);font-family:'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;">{{ T.contact.emailLabel }}</span><span style="font-weight:600;">contacto@merakicode.mx</span></span>
+                </a>
+                <div style="display:flex;align-items:center;gap:13px;color:var(--text);">
+                  <span aria-hidden="true" style="flex-shrink:0;width:40px;height:40px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);color:var(--accent);"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span>
+                  <span><span style="display:block;font-size:.74rem;color:var(--dim);font-family:'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;">{{ T.contact.locationLabel }}</span><span style="font-weight:600;">{{ T.contact.location }}</span></span>
+                </div>
+              </div>
+            </div>
+
+            <form onSubmit="{{ onSubmit }}" style="border:1px solid var(--border);border-radius:18px;background:var(--card);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:clamp(22px,3vw,30px);display:flex;flex-direction:column;gap:16px;">
+              <div style="display:flex;flex-direction:column;gap:7px;">
+                <label for="mc-name" style="font-size:.82rem;font-weight:600;color:var(--muted);">{{ T.contact.formName }}</label>
+                <input id="mc-name" type="text" value="{{ form.name }}" onChange="{{ onName }}" placeholder="{{ T.contact.formName }}" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.96rem;font-family:inherit;transition:border-color .2s;" style-focus="border-color:var(--accent);outline:none">
+              </div>
+              <div style="display:flex;flex-direction:column;gap:7px;">
+                <label for="mc-email" style="font-size:.82rem;font-weight:600;color:var(--muted);">{{ T.contact.formEmail }}</label>
+                <input id="mc-email" type="email" value="{{ form.email }}" onChange="{{ onEmail }}" placeholder="tu@correo.com" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.96rem;font-family:inherit;transition:border-color .2s;" style-focus="border-color:var(--accent);outline:none">
+              </div>
+              <div style="display:flex;flex-direction:column;gap:7px;">
+                <label for="mc-msg" style="font-size:.82rem;font-weight:600;color:var(--muted);">{{ T.contact.formMessage }}</label>
+                <textarea id="mc-msg" rows="4" value="{{ form.message }}" onChange="{{ onMessage }}" placeholder="{{ T.contact.formMessage }}" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.96rem;font-family:inherit;resize:vertical;min-height:96px;transition:border-color .2s;" style-focus="border-color:var(--accent);outline:none"></textarea>
+              </div>
+              <button type="submit" style="display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:14px 18px;border:0;border-radius:11px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;font-weight:600;font-size:.98rem;font-family:inherit;cursor:pointer;box-shadow:0 12px 30px -14px rgba(34,211,238,.8);transition:transform .2s,box-shadow .2s;" style-hover="transform:translateY(-2px);box-shadow:0 16px 38px -14px rgba(34,211,238,.95)">
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M19.05 4.91A9.82 9.82 0 0 0 12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.02z"></path></svg>
+                {{ T.contact.formSend }}
+              </button>
+              <sc-if value="{{ sent }}">
+                <div style="display:flex;align-items:center;gap:8px;font-size:.86rem;color:var(--accent);font-weight:500;">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+                  {{ T.contact.sent }}
+                </div>
+              </sc-if>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- MERAKI-SECTIONS -->
+  </main>
+  <footer style="border-top:1px solid var(--border);background:var(--bg-soft);padding:clamp(42px,6vw,66px) 0 30px;position:relative;">
+    <div style="max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,24px);">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:34px;padding-bottom:40px;">
+        <div style="grid-column:span 1;min-width:210px;">
+          <a href="#hero" aria-label="MerakiCode — inicio" style="display:inline-flex;align-items:center;gap:11px;text-decoration:none;color:var(--text);font-weight:800;font-size:1.16rem;letter-spacing:-.02em;margin-bottom:14px;">
+            <span aria-hidden="true" style="display:inline-flex;width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--g1),var(--g2));align-items:center;justify-content:center;color:#fff;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.95rem;">M</span>
+            <span>Meraki<span style="color:var(--accent)">Code</span></span>
+          </a>
+          <p style="font-size:.92rem;color:var(--muted);line-height:1.6;margin:0 0 18px;max-width:30ch;">{{ T.footer.tagline }}</p>
+          <div style="display:flex;align-items:center;gap:9px;">
+            <a href="#" aria-label="LinkedIn" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--muted);transition:color .2s,border-color .2s;" style-hover="color:var(--accent);border-color:var(--accent)"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57z"></path></svg></a>
+            <a href="#" aria-label="GitHub" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--muted);transition:color .2s,border-color .2s;" style-hover="color:var(--accent);border-color:var(--accent)"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.08.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.16.57.67.48A10 10 0 0 0 12 2z"></path></svg></a>
+            <a href="#" aria-label="X" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--muted);transition:color .2s,border-color .2s;" style-hover="color:var(--accent);border-color:var(--accent)"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M18 3h3l-7.5 8.5L22 21h-6.4l-4.3-5.6L6 21H3l8-9.1L2 3h6.5l3.9 5.2zm-1.1 16h1.7L7.2 4.8H5.4z"></path></svg></a>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:16px;">{{ T.footer.nav }}</div>
+          <div style="display:flex;flex-direction:column;gap:11px;">
+            <a href="#services" style="font-size:.92rem;color:var(--muted);text-decoration:none;transition:color .2s;" style-hover="color:var(--accent)">{{ T.nav.services }}</a>
+            <a href="#process" style="font-size:.92rem;color:var(--muted);text-decoration:none;transition:color .2s;" style-hover="color:var(--accent)">{{ T.nav.process }}</a>
+            <a href="#portfolio" style="font-size:.92rem;color:var(--muted);text-decoration:none;transition:color .2s;" style-hover="color:var(--accent)">{{ T.nav.portfolio }}</a>
+            <a href="#pricing" style="font-size:.92rem;color:var(--muted);text-decoration:none;transition:color .2s;" style-hover="color:var(--accent)">{{ T.nav.pricing }}</a>
+            <a href="#about" style="font-size:.92rem;color:var(--muted);text-decoration:none;transition:color .2s;" style-hover="color:var(--accent)">{{ T.nav.about }}</a>
+            <a href="#faq" style="font-size:.92rem;color:var(--muted);text-decoration:none;transition:color .2s;" style-hover="color:var(--accent)">{{ T.nav.faq }}</a>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:16px;">{{ T.footer.contact }}</div>
+          <div style="display:flex;flex-direction:column;gap:11px;">
+            <a href="{{ waContact }}" target="_blank" rel="noopener" style="font-size:.92rem;color:var(--muted);text-decoration:none;transition:color .2s;" style-hover="color:var(--accent)">WhatsApp · 442 504 1110</a>
+            <a href="mailto:contacto@merakicode.mx" style="font-size:.92rem;color:var(--muted);text-decoration:none;transition:color .2s;" style-hover="color:var(--accent)">contacto@merakicode.mx</a>
+            <span style="font-size:.92rem;color:var(--muted);">{{ T.contact.location }}</span>
+            <a href="#contact" style="font-size:.92rem;color:var(--accent);text-decoration:none;font-weight:600;">{{ T.nav.contact }} →</a>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:16px;">{{ T.footer.follow }}</div>
+          <div role="group" aria-label="{{ T.nav.langLabel }}" style="display:inline-flex;padding:3px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+            <button type="button" onClick="{{ setEs }}" aria-pressed="{{ isEs }}" aria-label="Español" style="{{ langEsStyle }}">ES</button>
+            <button type="button" onClick="{{ setEn }}" aria-pressed="{{ isEn }}" aria-label="English" style="{{ langEnStyle }}">EN</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--border);padding-top:24px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;">
+        <span style="font-size:.85rem;color:var(--dim);">© {{ year }} MerakiCode. {{ T.footer.rights }}</span>
+        <a href="#" style="font-size:.85rem;color:var(--muted);text-decoration:none;transition:color .2s;" style-hover="color:var(--accent)">{{ T.footer.privacy }}</a>
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;brandGradient&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: [&quot;#2563EB&quot;, &quot;#22D3EE&quot;], &quot;options&quot;: [[&quot;#2563EB&quot;,&quot;#22D3EE&quot;],[&quot;#6366F1&quot;,&quot;#22D3EE&quot;],[&quot;#2563EB&quot;,&quot;#3B82F6&quot;],[&quot;#0EA5E9&quot;,&quot;#22D3EE&quot;],[&quot;#7C3AED&quot;,&quot;#22D3EE&quot;]], &quot;tsType&quot;: &quot;string[]&quot;, &quot;section&quot;: &quot;Marca&quot; },
+  &quot;showGrid&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Fondo&quot; },
+  &quot;showGlow&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Fondo&quot; }
+}">
+const t = {
+  es: {
+    meta: { title: "MerakiCode — Desarrollo de software, web, apps y SaaS a la medida", description: "Estudio de desarrollo de software. Creamos sitios web, aplicaciones y plataformas SaaS a la medida para startups y PYMEs. Escríbenos por WhatsApp." },
+    nav: { services: "Servicios", process: "Proceso", portfolio: "Portafolio", pricing: "Precios", about: "Nosotros", faq: "FAQ", contact: "Contacto", cta: "WhatsApp", menu: "Menú", langLabel: "Cambiar idioma", themeLabel: "Cambiar tema" },
+    hero: {
+      badge: "Estudio de desarrollo de software",
+      title: "Desarrollamos el software que tu empresa necesita.",
+      subtitle: "Sitios web, aplicaciones y plataformas SaaS a la medida, con tecnología moderna y acompañamiento cercano.",
+      ctaPrimary: "Escríbenos por WhatsApp",
+      ctaSecondary: "Ver servicios",
+      trust: "Respondemos en menos de 24 h · Sin compromiso",
+      live: "En vivo"
+    },
+    services: {
+      eyebrow: "Servicios", heading: "Lo que construimos para ti", sub: "Soluciones digitales end-to-end, desde la idea hasta producción.",
+      web: { title: "Sitios web y landing pages", desc: "Webs corporativas, landings y portafolios rápidos, responsivos y pensados para convertir." },
+      saas: { title: "SaaS y aplicaciones web", desc: "Plataformas, dashboards y sistemas web a la medida, escalables y seguros." },
+      custom: { title: "Software a medida e integraciones", desc: "Automatizaciones, APIs e integraciones que conectan tus herramientas." }
+    },
+    process: {
+      eyebrow: "Proceso", heading: "Cómo trabajamos", sub: "Un proceso claro y colaborativo en cada proyecto.",
+      s1: { title: "Descubrimiento y consultoría", desc: "Entendemos tu negocio, objetivos y alcance para definir la mejor solución." },
+      s2: { title: "Propuesta y diseño", desc: "Definimos alcance, tiempos y diseñamos la experiencia antes de escribir código." },
+      s3: { title: "Desarrollo y pruebas", desc: "Construimos con buenas prácticas y validamos la calidad en cada iteración." },
+      s4: { title: "Entrega y soporte", desc: "Lanzamos, capacitamos a tu equipo y te acompañamos con mantenimiento continuo." }
+    },
+    portfolio: {
+      eyebrow: "Portafolio", heading: "Estamos construyendo casos de éxito.", sub: "Pronto compartiremos algunos de los proyectos en los que trabajamos.", soon: "Próximamente",
+      items: [ { category: "Sitio web corporativo" }, { category: "Plataforma SaaS" }, { category: "Aplicación móvil" }, { category: "E-commerce" }, { category: "Dashboard analítico" }, { category: "Integración / API" } ]
+    },
+    stack: {
+      eyebrow: "Tecnologías", heading: "Un stack moderno y probado", sub: "Trabajamos con tecnologías estándar de la industria para construir productos rápidos, seguros y fáciles de mantener.",
+      coreLead: "Construimos con la ", coreHi: "mejor tecnología", frontend: "Frontend", backend: "Backend", infra: "Infraestructura / DB"
+    },
+    pricing: {
+      eyebrow: "Precios", heading: "Planes para cada etapa", sub: "Precios de referencia; cada proyecto se cotiza según su alcance.", popular: "Más popular", from: "Desde",
+      essential: { name: "Esencial", tag: "Sitios web y landing pages", price: "{{DESDE_X}}", cta: "Cotizar por WhatsApp", features: [ { t: "Sitio web o landing responsiva" }, { t: "Hasta 5 secciones / páginas" }, { t: "Diseño a medida y SEO básico" }, { t: "Formulario e integración WhatsApp" } ] },
+      pro: { name: "Profesional", tag: "Web app / E-commerce", price: "{{DESDE_X}}", cta: "Cotizar por WhatsApp", features: [ { t: "Aplicación web o tienda en línea" }, { t: "Panel de administración" }, { t: "Pasarela de pagos e integraciones" }, { t: "Autenticación de usuarios" }, { t: "Optimización y analítica" } ] },
+      custom: { name: "A medida", tag: "SaaS / Software a la medida", price: "Cotización personalizada", cta: "Hablemos por WhatsApp", features: [ { t: "Plataforma SaaS multiusuario" }, { t: "Arquitectura escalable en la nube" }, { t: "APIs e integraciones a medida" }, { t: "Roadmap y soporte dedicado" } ] }
+    },
+    about: {
+      eyebrow: "Nosotros", heading: "Somos MerakiCode",
+      mission: "Somos un estudio de desarrollo de software enfocado en crear productos digitales con propósito. Combinamos ingeniería sólida, diseño cuidado y acompañamiento cercano para ayudar a startups y PYMEs a crecer.",
+      team: [ { name: "{{NOMBRE 1}}", role: "Co-fundador · Desarrollo" }, { name: "{{NOMBRE 2}}", role: "Co-fundadora · Diseño / UX" }, { name: "{{NOMBRE 3}}", role: "Desarrollo backend" }, { name: "{{NOMBRE 4}}", role: "Proyectos y clientes" } ]
+    },
+    faq: {
+      eyebrow: "FAQ", heading: "Preguntas frecuentes",
+      items: [
+        { q: "¿Cuánto cuesta un proyecto?", a: "Depende del alcance. Manejamos precios de referencia por tipo de proyecto y preparamos una cotización a medida tras entender tus necesidades. Escríbenos por WhatsApp para una estimación." },
+        { q: "¿Cuánto tiempo toma?", a: "Una landing puede tomar de 1 a 3 semanas; una aplicación o SaaS, algunos meses. Definimos tiempos claros en la propuesta inicial." },
+        { q: "¿Trabajan con clientes fuera de México?", a: "Sí. Trabajamos de forma remota con clientes en cualquier zona horaria, con comunicación clara y entregas ágiles." },
+        { q: "¿Ofrecen mantenimiento y soporte?", a: "Sí. Ofrecemos planes de mantenimiento, mejoras y soporte continuo después del lanzamiento." },
+        { q: "¿Cómo son los pagos?", a: "Normalmente por hitos: un anticipo para iniciar y pagos parciales conforme avanza el proyecto. Lo definimos en el contrato." },
+        { q: "¿Firman acuerdos de confidencialidad (NDA)?", a: "Por supuesto. Firmamos NDA cuando lo necesites para proteger tu información e ideas." }
+      ]
+    },
+    contact: {
+      eyebrow: "Contacto", heading: "¿Listo para empezar tu proyecto?", sub: "Cuéntanos tu idea y te respondemos en menos de 24 horas.",
+      cta: "Escríbenos por WhatsApp", formName: "Nombre", formEmail: "Correo", formMessage: "Cuéntanos sobre tu proyecto", formSend: "Enviar por WhatsApp", sent: "Abriendo WhatsApp…", or: "o contáctanos directamente",
+      phoneLabel: "WhatsApp", emailLabel: "Correo", locationLabel: "Ubicación", location: "México · Remoto"
+    },
+    footer: { tagline: "Desarrollamos software a la medida para startups y PYMEs.", nav: "Navegación", contact: "Contacto", follow: "Síguenos", privacy: "Aviso de Privacidad", rights: "Todos los derechos reservados." },
+    wa: {
+      hero: "Hola MerakiCode, vi su sitio y me interesa desarrollar un proyecto. ¿Podemos platicar?",
+      nav: "Hola MerakiCode, me gustaría más información.",
+      contact: "Hola MerakiCode, quiero iniciar un proyecto.",
+      planEsencial: "Hola MerakiCode, me interesa el plan Esencial (sitio web / landing). ¿Me pueden dar más información?",
+      planPro: "Hola MerakiCode, me interesa el plan Profesional (web app / e-commerce). ¿Me pueden cotizar?",
+      planCustom: "Hola MerakiCode, me interesa una solución a medida (SaaS / software). Me gustaría una cotización."
+    }
+  },
+  en: {
+    meta: { title: "MerakiCode — Custom software, web, apps & SaaS development", description: "Software development studio. We build custom websites, applications and SaaS platforms for startups and SMBs. Message us on WhatsApp." },
+    nav: { services: "Services", process: "Process", portfolio: "Portfolio", pricing: "Pricing", about: "About", faq: "FAQ", contact: "Contact", cta: "WhatsApp", menu: "Menu", langLabel: "Change language", themeLabel: "Toggle theme" },
+    hero: {
+      badge: "Software development studio",
+      title: "We build the software your business needs.",
+      subtitle: "Custom websites, applications and SaaS platforms, built with modern technology and close, hands-on support.",
+      ctaPrimary: "Message us on WhatsApp",
+      ctaSecondary: "See services",
+      trust: "We reply within 24h · No commitment",
+      live: "Live"
+    },
+    services: {
+      eyebrow: "Services", heading: "What we build for you", sub: "End-to-end digital solutions, from idea to production.",
+      web: { title: "Websites & landing pages", desc: "Corporate sites, landing pages and portfolios that are fast, responsive and built to convert." },
+      saas: { title: "SaaS & web applications", desc: "Custom platforms, dashboards and web systems — scalable and secure." },
+      custom: { title: "Custom software & integrations", desc: "Automations, APIs and integrations that connect your tools." }
+    },
+    process: {
+      eyebrow: "Process", heading: "How we work", sub: "A clear, collaborative process on every project.",
+      s1: { title: "Discovery & consulting", desc: "We understand your business, goals and scope to define the best solution." },
+      s2: { title: "Proposal & design", desc: "We define scope, timelines and design the experience before writing code." },
+      s3: { title: "Development & testing", desc: "We build with best practices and validate quality on every iteration." },
+      s4: { title: "Delivery & support", desc: "We launch, train your team and provide ongoing maintenance." }
+    },
+    portfolio: {
+      eyebrow: "Portfolio", heading: "We're building success stories.", sub: "We'll soon share some of the projects we're working on.", soon: "Coming soon",
+      items: [ { category: "Corporate website" }, { category: "SaaS platform" }, { category: "Mobile app" }, { category: "E-commerce" }, { category: "Analytics dashboard" }, { category: "Integration / API" } ]
+    },
+    stack: {
+      eyebrow: "Technologies", heading: "A modern, proven stack", sub: "We work with industry-standard technologies to build fast, secure and maintainable products.",
+      coreLead: "We build with the ", coreHi: "best technology", frontend: "Frontend", backend: "Backend", infra: "Infrastructure / DB"
+    },
+    pricing: {
+      eyebrow: "Pricing", heading: "Plans for every stage", sub: "Reference pricing; every project is quoted based on its scope.", popular: "Most popular", from: "From",
+      essential: { name: "Essential", tag: "Websites & landing pages", price: "{{DESDE_X}}", cta: "Get a quote on WhatsApp", features: [ { t: "Responsive website or landing page" }, { t: "Up to 5 sections / pages" }, { t: "Custom design and basic SEO" }, { t: "Contact form and WhatsApp integration" } ] },
+      pro: { name: "Professional", tag: "Web app / E-commerce", price: "{{DESDE_X}}", cta: "Get a quote on WhatsApp", features: [ { t: "Web application or online store" }, { t: "Admin dashboard" }, { t: "Payment gateway and integrations" }, { t: "User authentication" }, { t: "Optimization and analytics" } ] },
+      custom: { name: "Custom", tag: "SaaS / Custom software", price: "Custom quote", cta: "Let's talk on WhatsApp", features: [ { t: "Multi-user SaaS platform" }, { t: "Scalable cloud architecture" }, { t: "Custom APIs and integrations" }, { t: "Roadmap and dedicated support" } ] }
+    },
+    about: {
+      eyebrow: "About us", heading: "We are MerakiCode",
+      mission: "We're a software development studio focused on building purposeful digital products. We combine solid engineering, thoughtful design and close support to help startups and SMBs grow.",
+      team: [ { name: "{{NAME 1}}", role: "Co-founder · Development" }, { name: "{{NAME 2}}", role: "Co-founder · Design / UX" }, { name: "{{NAME 3}}", role: "Backend development" }, { name: "{{NAME 4}}", role: "Projects & clients" } ]
+    },
+    faq: {
+      eyebrow: "FAQ", heading: "Frequently asked questions",
+      items: [
+        { q: "How much does a project cost?", a: "It depends on scope. We use reference pricing per project type and prepare a custom quote after understanding your needs. Message us on WhatsApp for an estimate." },
+        { q: "How long does it take?", a: "A landing page can take 1–3 weeks; an application or SaaS, a few months. We set clear timelines in the initial proposal." },
+        { q: "Do you work with clients outside Mexico?", a: "Yes. We work remotely with clients in any time zone, with clear communication and agile delivery." },
+        { q: "Do you offer maintenance and support?", a: "Yes. We offer maintenance plans, improvements and ongoing support after launch." },
+        { q: "How do payments work?", a: "Usually by milestones: a deposit to start and partial payments as the project progresses. We define this in the contract." },
+        { q: "Do you sign NDAs?", a: "Absolutely. We sign NDAs whenever you need to protect your information and ideas." }
+      ]
+    },
+    contact: {
+      eyebrow: "Contact", heading: "Ready to start your project?", sub: "Tell us your idea and we'll reply within 24 hours.",
+      cta: "Message us on WhatsApp", formName: "Name", formEmail: "Email", formMessage: "Tell us about your project", formSend: "Send via WhatsApp", sent: "Opening WhatsApp…", or: "or reach us directly",
+      phoneLabel: "WhatsApp", emailLabel: "Email", locationLabel: "Location", location: "Mexico · Remote"
+    },
+    footer: { tagline: "We build custom software for startups and SMBs.", nav: "Navigation", contact: "Contact", follow: "Follow us", privacy: "Privacy Notice", rights: "All rights reserved." },
+    wa: {
+      hero: "Hi MerakiCode, I saw your site and I'm interested in building a project. Can we talk?",
+      nav: "Hi MerakiCode, I'd like more information.",
+      contact: "Hi MerakiCode, I want to start a project.",
+      planEsencial: "Hi MerakiCode, I'm interested in the Essential plan (website / landing). Could you share more info?",
+      planPro: "Hi MerakiCode, I'm interested in the Professional plan (web app / e-commerce). Could you send a quote?",
+      planCustom: "Hi MerakiCode, I'm interested in a custom solution (SaaS / software). I'd like a quote."
+    }
+  }
+};
+
+const WA_PHONE = "4425041110";
+
+function cssObj(str) { var o = {}; String(str).split(";").forEach(function (d) { d = d.trim(); if (!d) return; var i = d.indexOf(":"); if (i < 0) return; var k = d.slice(0, i).trim(); var v = d.slice(i + 1).trim(); o[k.replace(/-([a-z])/g, function (m, c) { return c.toUpperCase(); })] = v; }); return o; }
+
+const HERO_CODE = [
+  [["const", "#c084fc"], [" app ", "#E7EBF3"], ["= ", "#7C8598"], ["createApp", "#22D3EE"], ["({", "#7C8598"]],
+  [["  name", "#93c5fd"], [": ", "#7C8598"], ["\"MerakiCode\"", "#86efac"], [",", "#7C8598"]],
+  [["  modules", "#93c5fd"], [": [", "#7C8598"], ["\"web\"", "#86efac"], [", ", "#7C8598"], ["\"saas\"", "#86efac"], [", ", "#7C8598"], ["\"api\"", "#86efac"], ["],", "#7C8598"]],
+  [["});", "#7C8598"]],
+  [["await", "#c084fc"], [" app", "#E7EBF3"], [".", "#7C8598"], ["deploy", "#22D3EE"], ["();", "#7C8598"]]
+];
+const HERO_CODE_LEN = HERO_CODE.reduce(function (a, l) { return a + l.reduce(function (b, tk) { return b + tk[0].length; }, 0); }, 0);
+const HERO_CMD = "npm run build";
+
+// Marcas del stack — íconos monocromáticos (fill=currentColor) que revelan su color al hover.
+const TECH_ICONS = {
+  react: "M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38a2.167 2.167 0 0 0-1.092-.278zm-.005 1.09v.006c.225 0 .406.044.558.127.666.382.955 1.835.73 3.704-.054.46-.142.945-.25 1.44a23.476 23.476 0 0 0-3.107-.534A23.892 23.892 0 0 0 12.769 4.7c1.592-1.48 3.087-2.292 4.105-2.295zm-9.77.02c1.012 0 2.514.808 4.11 2.28-.686.72-1.37 1.537-2.02 2.442a22.73 22.73 0 0 0-3.113.538 15.02 15.02 0 0 1-.254-1.42c-.23-1.868.054-3.32.714-3.707.19-.09.4-.127.563-.132zm4.882 3.05c.455.468.91.992 1.36 1.564-.44-.02-.89-.034-1.345-.034-.46 0-.915.01-1.36.034.44-.572.895-1.096 1.345-1.565zM12 8.1c.74 0 1.477.034 2.202.093.406.582.802 1.203 1.183 1.86.372.64.71 1.29 1.018 1.946-.308.655-.646 1.31-1.013 1.95-.38.66-.773 1.288-1.18 1.87a25.64 25.64 0 0 1-4.412.005 26.64 26.64 0 0 1-1.183-1.86c-.372-.64-.71-1.29-1.018-1.946a25.17 25.17 0 0 1 1.013-1.954c.38-.66.773-1.286 1.18-1.868A25.245 25.245 0 0 1 12 8.098zm-3.635.254c-.24.377-.48.763-.704 1.16-.225.39-.435.782-.635 1.174-.265-.656-.49-1.31-.676-1.947.64-.15 1.315-.283 2.015-.386zm7.26 0c.695.103 1.365.23 2.006.387-.18.632-.405 1.282-.66 1.933a25.952 25.952 0 0 0-1.345-2.32zm3.063.675c.484.15.944.317 1.375.498 1.732.74 2.852 1.708 2.852 2.476-.005.768-1.125 1.74-2.857 2.475-.42.18-.88.342-1.355.493a23.966 23.966 0 0 0-1.1-2.98c.45-1.017.81-2.01 1.085-2.964zm-13.395.004c.278.96.645 1.957 1.1 2.98a23.142 23.142 0 0 0-1.086 2.964c-.484-.15-.944-.318-1.37-.5-1.732-.737-2.852-1.706-2.852-2.474 0-.768 1.12-1.742 2.852-2.476.42-.18.88-.342 1.356-.494zm11.678 4.28c.265.657.49 1.312.676 1.948-.64.157-1.316.29-2.016.39a25.819 25.819 0 0 0 1.341-2.338zm-9.945.02c.2.392.41.783.635 1.175.23.39.465.772.705 1.143a22.005 22.005 0 0 1-2.006-.386c.18-.63.406-1.282.66-1.933zM17.92 16.32c.112.493.2.968.254 1.423.23 1.868-.054 3.32-.714 3.708-.147.09-.338.128-.563.128-1.012 0-2.514-.807-4.11-2.28.686-.72 1.37-1.536 2.02-2.44 1.107-.118 2.154-.3 3.113-.54zm-11.83.01c.96.234 2.006.415 3.107.532.66.905 1.345 1.727 2.035 2.446-1.595 1.483-3.092 2.295-4.11 2.295a1.185 1.185 0 0 1-.553-.132c-.666-.38-.955-1.834-.73-3.703.054-.46.142-.944.25-1.438zm4.56.64c.44.02.89.034 1.345.034.46 0 .915-.01 1.36-.034-.44.572-.895 1.095-1.345 1.565-.455-.47-.91-.993-1.36-1.565z",
+  next: "M11.5725 0c-.1763 0-.3098.0013-.3584.0067-.0516.0053-.2159.021-.3636.0328-3.4088.3073-6.6017 2.1463-8.624 4.9728C1.1004 6.584.3802 8.3666.1082 10.255c-.0962.659-.108.8537-.108 1.7474s.012 1.0884.108 1.7476c.652 4.506 3.8591 8.2919 8.2087 9.6945.7789.2511 1.6.4223 2.5337.5255.3636.04 1.9354.04 2.299 0 1.6117-.1783 2.9772-.5772 4.3237-1.2643.2065-.1056.2464-.1337.2183-.1573-.0188-.0139-.8987-1.1938-1.9543-2.62l-1.919-2.592-2.4047-3.5583c-1.3231-1.9564-2.4117-3.556-2.4211-3.556-.0094-.0026-.0187 1.5787-.0235 3.509-.0067 3.3802-.0093 3.5162-.0516 3.596-.061.115-.108.1618-.2064.2134-.075.0374-.1408.0445-.495.0445h-.406l-.1078-.068a.4383.4383 0 0 1-.1572-.1712l-.0493-.1056.0053-4.703.0067-4.7054.0726-.0915c.0376-.0493.1174-.1125.1736-.143.0962-.047.1338-.0517.5396-.0517.4787 0 .5584.0187.6827.1547.0353.0377 1.3373 1.9987 2.895 4.3608a10760.433 10760.433 0 0 0 4.7344 7.1706l1.9002 2.8782.096-.0633c.8518-.5536 1.7525-1.3418 2.4657-2.1627 1.5179-1.7429 2.4963-3.868 2.8247-6.1363.0961-.6591.1078-.8537.1078-1.7475 0-.8937-.012-1.0884-.1078-1.7475-.6522-4.506-3.8592-8.2919-8.2087-9.6945-.7672-.2487-1.5836-.42-2.4985-.5232-.169-.0176-1.0835-.0366-1.6123-.037zm4.0685 7.217c.3473 0 .4082.0053.4857.047.1127.0562.204.1642.237.2767.0186.061.0234 1.3653.0186 4.3044l-.0067 4.2175-.7436-1.14-.7461-1.14v-3.066c0-1.982.0093-3.0963.0234-3.1502.0375-.1313.1196-.2346.2323-.2955.0961-.0494.1313-.054.4997-.054z",
+  typescript: "M1.125 0C.502 0 0 .502 0 1.125v21.75C0 23.498.502 24 1.125 24h21.75c.623 0 1.125-.502 1.125-1.125V1.125C24 .502 23.498 0 22.875 0zm17.363 9.75c.612 0 1.154.037 1.627.111a6.38 6.38 0 0 1 1.306.34v2.458a3.95 3.95 0 0 0-.643-.361 5.093 5.093 0 0 0-.717-.26 5.453 5.453 0 0 0-1.426-.2c-.3 0-.573.028-.819.086a2.1 2.1 0 0 0-.623.242c-.17.104-.3.229-.393.374a.888.888 0 0 0-.14.49c0 .196.053.373.156.529.104.156.252.304.443.444s.423.276.696.41c.273.135.582.274.926.416.47.197.892.407 1.266.628.374.222.695.473.963.753.268.279.472.598.614.957.142.359.213.776.213 1.253 0 .657-.125 1.21-.373 1.656a3.033 3.033 0 0 1-1.012 1.085 4.38 4.38 0 0 1-1.487.596c-.566.12-1.163.18-1.79.18a9.916 9.916 0 0 1-1.84-.164 5.544 5.544 0 0 1-1.512-.493v-2.63a5.033 5.033 0 0 0 3.237 1.2c.333 0 .624-.03.872-.09.249-.06.456-.144.623-.25.166-.108.29-.234.373-.38a1.023 1.023 0 0 0-.074-1.089 2.12 2.12 0 0 0-.537-.5 5.597 5.597 0 0 0-.807-.444 27.72 27.72 0 0 0-1.007-.436c-.918-.383-1.602-.852-2.053-1.405-.45-.553-.676-1.222-.676-2.005 0-.614.123-1.141.369-1.582.246-.441.58-.804 1.004-1.089a4.494 4.494 0 0 1 1.47-.629 7.536 7.536 0 0 1 1.77-.201zm-15.113.188h9.563v2.166H9.506v9.646H6.789v-9.646H3.375z",
+  tailwind: "M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.337 6.182 14.976 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.337 13.382 8.976 12 6.001 12z",
+  node: "M11.998 24c-.321 0-.641-.084-.922-.247l-2.936-1.737c-.438-.245-.224-.332-.08-.383.585-.203.703-.25 1.328-.604.065-.037.151-.023.218.017l2.256 1.339c.082.045.197.045.272 0l8.795-5.076c.082-.047.134-.141.134-.238V6.921c0-.099-.053-.192-.137-.242l-8.791-5.072c-.081-.047-.189-.047-.271 0L3.075 6.68c-.084.049-.138.145-.138.241v10.146c0 .097.054.189.139.235l2.409 1.392c1.307.654 2.108-.116 2.108-.89V7.787c0-.142.114-.253.256-.253h1.115c.139 0 .255.112.255.253v10.021c0 1.745-.95 2.745-2.604 2.745-.508 0-.909 0-2.026-.551L2.28 18.675c-.57-.329-.922-.945-.922-1.604V6.921c0-.659.353-1.275.922-1.603L11.076.236c.557-.315 1.296-.315 1.848 0l8.794 5.082c.57.329.924.944.924 1.603v10.146c0 .659-.354 1.273-.924 1.604l-8.794 5.078c-.28.163-.599.247-.926.247zm2.718-6.994c-3.849 0-4.655-1.766-4.655-3.248 0-.14.113-.253.254-.253h1.136c.127 0 .233.091.253.216.171 1.157.683 1.741 3.012 1.741 1.853 0 2.641-.419 2.641-1.402 0-.566-.223-.986-3.103-1.267-2.406-.239-3.894-.771-3.894-2.696 0-1.775 1.496-2.834 4.004-2.834 2.817 0 4.212.978 4.389 3.077.005.072-.021.141-.069.195-.048.05-.115.081-.185.081h-1.14c-.119 0-.223-.084-.246-.199-.275-1.218-.941-1.607-2.748-1.607-2.023 0-2.257.705-2.257 1.233 0 .639.278.826 3.008 1.187 2.703.357 3.988.863 3.988 2.763-.002 1.917-1.6 3.014-4.389 3.014z",
+  python: "M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05-.05-1.23.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.24-.01h.16l.06.01h8.16v-.83H6.18l-.01-2.75-.02-.37.05-.34.11-.31.17-.28.25-.26.31-.23.38-.2.44-.18.51-.15.58-.12.64-.1.71-.06.77-.04.84-.02 1.27.05zm-6.3 1.98l-.23.33-.08.41.08.41.23.34.33.22.41.09.41-.09.33-.22.23-.34.08-.41-.08-.41-.23-.33-.33-.22-.41-.09-.41.09zm13.09 3.95l.28.06.32.12.35.18.36.27.36.35.35.47.32.59.28.73.21.88.14 1.04.05 1.23-.06 1.23-.16 1.04-.24.86-.32.71-.36.57-.4.45-.42.33-.42.24-.4.16-.36.09-.32.05-.24.02-.16-.01h-8.22v.82h5.84l.01 2.76.02.36-.05.34-.11.31-.17.29-.25.25-.31.24-.38.2-.44.17-.51.15-.58.13-.64.09-.71.07-.77.04-.84.01-1.27-.04-1.07-.14-.9-.2-.73-.25-.59-.3-.45-.33-.34-.34-.25-.34-.16-.33-.1-.3-.04-.25-.02-.2.01-.13v-5.34l.05-.64.13-.54.21-.46.26-.38.3-.32.33-.24.35-.2.35-.14.33-.1.3-.06.26-.04.21-.02.13-.01h5.84l.69-.05.59-.14.5-.21.41-.28.33-.32.27-.35.2-.36.15-.36.1-.35.07-.32.04-.28.02-.21V6.07h2.09l.14.01zm-6.47 14.25l-.23.33-.08.41.08.41.23.33.33.23.41.08.41-.08.33-.23.23-.33.08-.41-.08-.41-.23-.33-.33-.23-.41-.08-.41.08z",
+  postgresql: "M17.128 0a10.134 10.134 0 0 0-2.755.403l-.063.02A10.922 10.922 0 0 0 12.6.258C11.422.238 10.41.524 9.594 1.03c-.808-.271-2.483-.763-4.253-.634-1.23.088-2.562.489-3.582 1.588C.739 3.081.018 4.78.018 7.01c0 .781.096 1.588.32 2.371.407 1.417 1.474 4.885 2.567 7.44.535 1.25 1.093 2.34 1.687 3.157.297.408.616.762.98 1.05.365.29.79.518 1.288.518h.03c.5 0 .924-.229 1.288-.518.364-.288.684-.642.98-1.05.594-.817 1.152-1.907 1.687-3.157 1.093-2.555 2.16-6.023 2.567-7.44.224-.783.32-1.59.32-2.371 0-2.23-.721-3.929-1.741-5.026C10.995.524 9.984.238 8.806.258a10.922 10.922 0 0 0-1.71.165l-.063-.02A10.134 10.134 0 0 0 4.278 0H17.128z",
+  docker: "M13.983 11.078h2.119a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.119a.185.185 0 0 0-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 0 0 .186-.186V3.574a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 0 0 .186-.186V6.29a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 0 0 .184-.186V6.29a.185.185 0 0 0-.185-.185H8.1a.185.185 0 0 0-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 0 0 .185-.186V6.29a.185.185 0 0 0-.185-.185H5.136a.186.186 0 0 0-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 0 0 .185-.185V9.006a.185.185 0 0 0-.185-.186h-2.119a.186.186 0 0 0-.186.185v1.888c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 0 0-.75.748 11.376 11.376 0 0 0 .692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137a16.19 16.19 0 0 0 2.997-.275 12.4 12.4 0 0 0 3.917-1.42c.984-.568 1.87-1.289 2.62-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288z"
+};
+const TECHS = [
+  { key: "react", name: "React", brand: "#61DAFB", x: 19, y: 26, depth: "near" },
+  { key: "next", name: "Next.js", brand: "#FFFFFF", x: 50, y: 12, depth: "far" },
+  { key: "typescript", name: "TypeScript", brand: "#3178C6", x: 81, y: 24, depth: "near" },
+  { key: "node", name: "Node.js", brand: "#5FA04E", x: 87, y: 60, depth: "mid" },
+  { key: "tailwind", name: "Tailwind CSS", brand: "#38BDF8", x: 71, y: 84, depth: "near" },
+  { key: "docker", name: "Docker", brand: "#2496ED", x: 50, y: 91, depth: "mid" },
+  { key: "postgresql", name: "PostgreSQL", brand: "#5B9BD5", x: 28, y: 84, depth: "far" },
+  { key: "python", name: "Python", brand: "#5A9FD4", x: 13, y: 60, depth: "mid" }
+];
+const TECH_EDGES = [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,0]];
+const TECH_DEPTH = { near: { scale: 1, blur: 0, op: 1, par: 0.9, z: 12 }, mid: { scale: 0.9, blur: 0.6, op: 0.9, par: 0.5, z: 9 }, far: { scale: 0.8, blur: 1.3, op: 0.78, par: 0.26, z: 6 } };
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    let lang = "es", theme = "dark";
+    try {
+      const sl = localStorage.getItem("merakicode-lang");
+      lang = (sl === "es" || sl === "en") ? sl : (((navigator.language || "").toLowerCase().indexOf("en") === 0) ? "en" : "es");
+      const st = localStorage.getItem("merakicode-theme");
+      theme = (st === "light" || st === "dark") ? st : ((window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light");
+    } catch (e) {}
+    this.state = { lang, theme, menuOpen: false, isMobile: false, openFaq: 0, form: { name: "", email: "", message: "" }, sent: false, hp: 0, typed: 0, cmd: 0 };
+    this._t = [];
+    this._reduced = false;
+    this.navRef = React.createRef();
+    this.onScroll = this.onScroll.bind(this);
+    this.onMq = this.onMq.bind(this);
+    try { this.mq = window.matchMedia("(max-width: 880px)"); this.state.isMobile = this.mq.matches; } catch (e) { this.mq = null; }
+  }
+
+  componentDidMount() {
+    this.applyTheme();
+    this.applyBrand();
+    this.applyMeta();
+    window.addEventListener("scroll", this.onScroll, { passive: true });
+    this.onScroll();
+    this.initReveal();
+    try { this._reduced = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) { this._reduced = false; }
+    this.startHero();
+    if (this.mq) {
+      if (this.mq.addEventListener) this.mq.addEventListener("change", this.onMq);
+      else if (this.mq.addListener) this.mq.addListener(this.onMq);
+    }
+  }
+  componentDidUpdate() { this.onScroll(); this.applyBrand(); }
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.onScroll);
+    if (this._io) this._io.disconnect();
+    if (this.mq) {
+      if (this.mq.removeEventListener) this.mq.removeEventListener("change", this.onMq);
+      else if (this.mq.removeListener) this.mq.removeListener(this.onMq);
+    }
+    if (this._iv1) clearInterval(this._iv1);
+    if (this._iv2) clearInterval(this._iv2);
+    (this._t || []).forEach(function (id) { clearTimeout(id); });
+  }
+
+  onMq() { this.setState({ isMobile: this.mq.matches, menuOpen: false }); }
+
+  onScroll() {
+    const scrolled = (window.scrollY || window.pageYOffset || 0) > 8;
+    const nav = this.navRef.current;
+    if (!nav) return;
+    nav.style.background = scrolled ? "var(--nav-bg)" : "transparent";
+    nav.style.backdropFilter = scrolled ? "blur(16px) saturate(160%)" : "none";
+    nav.style.webkitBackdropFilter = scrolled ? "blur(16px) saturate(160%)" : "none";
+    nav.style.borderBottomColor = scrolled ? "var(--border)" : "transparent";
+    nav.style.boxShadow = scrolled ? "0 10px 34px -22px rgba(0,0,0,.55)" : "none";
+  }
+
+  initReveal() {
+    try {
+      const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const els = Array.prototype.slice.call(document.querySelectorAll("[data-reveal]"));
+      if (reduce || !("IntersectionObserver" in window)) { els.forEach(el => { el.style.opacity = "1"; el.style.transform = "none"; }); return; }
+      els.forEach(el => { el.style.opacity = "0"; el.style.transform = "translateY(20px)"; el.style.transition = "opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1)"; });
+      this._io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const d = parseInt(el.getAttribute("data-reveal-delay") || "0", 10);
+            setTimeout(() => { el.style.opacity = "1"; el.style.transform = "none"; }, d);
+            this._io.unobserve(el);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+      els.forEach(el => this._io.observe(el));
+    } catch (e) {}
+  }
+
+  applyTheme() { try { document.documentElement.setAttribute("data-theme", this.state.theme); } catch (e) {} }
+  applyBrand() { try { const g = this.props.brandGradient; if (Array.isArray(g) && g.length >= 2) { document.documentElement.style.setProperty("--g1", g[0]); document.documentElement.style.setProperty("--g2", g[1]); } } catch (e) {} }
+  applyMeta() {
+    try {
+      const m = t[this.state.lang].meta;
+      document.title = m.title;
+      let el = document.querySelector('meta[name="description"]');
+      if (!el) { el = document.createElement("meta"); el.setAttribute("name", "description"); document.head.appendChild(el); }
+      el.setAttribute("content", m.description);
+      document.documentElement.setAttribute("lang", this.state.lang);
+    } catch (e) {}
+  }
+
+  setLang(l) { this.setState({ lang: l, menuOpen: false }, () => { try { localStorage.setItem("merakicode-lang", l); } catch (e) {} this.applyMeta(); }); }
+  toggleTheme() { this.setState(s => ({ theme: s.theme === "dark" ? "light" : "dark" }), () => { try { localStorage.setItem("merakicode-theme", this.state.theme); } catch (e) {} this.applyTheme(); }); }
+  toggleMenu() { this.setState(s => ({ menuOpen: !s.menuOpen })); }
+  closeMenu() { this.setState({ menuOpen: false }); }
+  toggleFaq(i) { this.setState(s => ({ openFaq: s.openFaq === i ? -1 : i })); }
+
+  wa(msg) { return "https://wa.me/" + WA_PHONE + "?text=" + encodeURIComponent(msg); }
+
+  onField(k) { return (e) => { const v = e.target.value; this.setState(s => ({ form: Object.assign({}, s.form, { [k]: v }), sent: false })); }; }
+  submitForm(e) {
+    e.preventDefault();
+    const f = this.state.form;
+    const msg = this.state.lang === "es"
+      ? "Hola MerakiCode, soy " + (f.name || "{{NOMBRE}}") + ". Mi correo: " + (f.email || "{{EMAIL}}") + ". " + (f.message || "")
+      : "Hi MerakiCode, I'm " + (f.name || "{{NAME}}") + ". My email: " + (f.email || "{{EMAIL}}") + ". " + (f.message || "");
+    try { window.open(this.wa(msg), "_blank", "noopener"); } catch (err) {}
+    this.setState({ sent: true });
+  }
+
+  pushT(fn, d) { var id = setTimeout(fn, d); (this._t = this._t || []).push(id); return id; }
+
+  startHero() {
+    if (this._reduced) { this.setState({ hp: 6, typed: HERO_CODE_LEN, cmd: HERO_CMD.length }); return; }
+    this.pushT(() => this.typeCode(), 550);
+  }
+
+  typeCode() {
+    var self = this, n = 0;
+    this._iv1 = setInterval(function () {
+      n++; self.setState({ typed: n });
+      if (n >= HERO_CODE_LEN) { clearInterval(self._iv1); self.pushT(function () { self.typeCmd(); }, 400); }
+    }, 20);
+  }
+
+  typeCmd() {
+    var self = this, n = 0;
+    this.setState({ hp: 1 });
+    this._iv2 = setInterval(function () {
+      n++; self.setState({ cmd: n });
+      if (n >= HERO_CMD.length) {
+        clearInterval(self._iv2);
+        self.pushT(function () { self.setState({ hp: 2 }); }, 1150);
+        self.pushT(function () { self.setState({ hp: 3 }); }, 2350);
+        self.pushT(function () { self.setState({ hp: 4 }); }, 3850);
+        self.pushT(function () { self.setState({ hp: 5 }); }, 5700);
+        self.pushT(function () { self.setState({ hp: 6 }); }, 6900);
+      }
+    }, 62);
+  }
+
+  onCtaMove(e) {
+    if (this._reduced) return;
+    var el = e.currentTarget, r = el.getBoundingClientRect();
+    var x = e.clientX - r.left, y = e.clientY - r.top;
+    el.style.transform = "translate(" + ((x - r.width / 2) * 0.16).toFixed(1) + "px," + ((y - r.height / 2) * 0.16 - 2).toFixed(1) + "px)";
+    el.style.setProperty("--mx", x + "px"); el.style.setProperty("--my", y + "px");
+    var sh = el.querySelector("[data-shine]"); if (sh) sh.style.opacity = "1";
+  }
+  onCtaLeave(e) {
+    var el = e.currentTarget; el.style.transform = "";
+    var sh = el.querySelector("[data-shine]"); if (sh) sh.style.opacity = "0";
+  }
+
+  _dot(c) { return React.createElement("span", { style: cssObj("width:10px;height:10px;border-radius:50%;flex-shrink:0;background:" + c) }); }
+  _cursor() { return React.createElement("span", { style: cssObj("display:inline-block;width:7px;height:14px;background:#22D3EE;margin-left:2px;vertical-align:-2px;border-radius:1px;animation:mc-blink 1s steps(1) infinite") }); }
+  _spin() { return React.createElement("span", { style: cssObj("display:inline-block;width:12px;height:12px;border-radius:50%;border:2px solid var(--border-strong);border-top-color:#22D3EE;animation:mc-spin .7s linear infinite;flex-shrink:0") }); }
+
+  _codeLayer() {
+    var h = React.createElement, S = cssObj, hp = this.state.hp;
+    var typed = this._reduced ? HERO_CODE_LEN : this.state.typed;
+    var rem = typed, rows = [];
+    for (var li = 0; li < HERO_CODE.length; li++) {
+      var toks = HERO_CODE[li], spans = [];
+      for (var ti = 0; ti < toks.length; ti++) {
+        if (rem <= 0) break;
+        var show = toks[ti][0].slice(0, rem); rem -= show.length;
+        spans.push(h("span", { key: ti, style: { color: toks[ti][1], whiteSpace: "pre" } }, show));
+      }
+      rows.push({ n: li + 1, spans: spans });
+      if (rem <= 0) break;
+    }
+    var out = [];
+    for (var i = 0; i < rows.length; i++) {
+      var kids = rows[i].spans.slice();
+      if (i === rows.length - 1 && hp <= 1 && typed < HERO_CODE_LEN) kids.push(this._cursor());
+      out.push(h("div", { key: i, style: S("display:flex;gap:13px;min-height:19px") },
+        h("span", { style: S("color:#495166;width:12px;text-align:right;flex-shrink:0;user-select:none") }, String(rows[i].n)),
+        h("span", { style: S("white-space:pre-wrap;word-break:break-word") }, kids)));
+    }
+    if (hp >= 1) {
+      var cmdShown = this._reduced ? HERO_CMD : HERO_CMD.slice(0, this.state.cmd);
+      var done = this._reduced || this.state.cmd >= HERO_CMD.length;
+      var prompt = [h("span", { key: "s", style: S("color:#22D3EE") }, "$"), h("span", { key: "c", style: S("color:#E7EBF3;white-space:pre") }, " " + cmdShown)];
+      if (hp === 1 && !done) prompt.push(this._cursor());
+      var block = [h("div", { key: "p", style: S("display:flex;align-items:center") }, prompt)];
+      if (done) {
+        block.push(h("div", { key: "b", style: S("display:flex;align-items:center;gap:8px;margin-top:9px;color:var(--muted)") }, this._spin(), h("span", null, this.state.lang === "es" ? "Compilando módulos…" : "Building modules…")));
+        block.push(h("div", { key: "pr", style: S("margin-top:10px;height:4px;border-radius:3px;background:var(--surface-2);overflow:hidden") }, h("div", { style: S("height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,var(--g1),var(--g2));animation:mc-progress 1.1s ease .1s forwards") })));
+      }
+      out.push(h("div", { key: "cmd", style: S("margin-top:14px;padding-top:13px;border-top:1px solid var(--border)") }, block));
+    }
+    var op = hp <= 1 ? "1" : "0", bl = hp >= 2 ? "7px" : "0px", sc = hp >= 2 ? "1.03" : "1";
+    return h("div", { style: S("position:absolute;inset:0;padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.5;overflow:hidden;pointer-events:none;opacity:" + op + ";filter:blur(" + bl + ");transform:scale(" + sc + ");transition:opacity .55s ease,filter .55s ease,transform .55s ease") }, out);
+  }
+
+  _wireLayer() {
+    var h = React.createElement, S = cssObj, vis = this.state.hp === 2;
+    var bx = function (st) { return h("div", { style: S("border:1px dashed var(--border-strong);background:var(--surface);border-radius:7px;" + st) }); };
+    var body = h("div", { style: S("display:flex;gap:12px;height:100%") },
+      h("div", { style: S("display:flex;flex-direction:column;gap:8px;width:56px") }, bx("height:22px"), bx("flex:1"), bx("height:38px")),
+      h("div", { style: S("flex:1;display:flex;flex-direction:column;gap:12px") },
+        h("div", { style: S("display:flex;gap:12px") }, bx("flex:1;height:44px"), bx("flex:1;height:44px"), bx("flex:1;height:44px")),
+        bx("flex:1")));
+    return h("div", { style: S("position:absolute;inset:0;padding:16px;pointer-events:none;opacity:" + (vis ? "1" : "0") + ";filter:blur(" + (vis ? "0" : "5px") + ");transform:scale(" + (vis ? "1" : "1.02") + ");transition:opacity .55s ease,filter .55s ease,transform .55s ease") }, body);
+  }
+
+  _appLayer() {
+    var h = React.createElement, S = cssObj, hp = this.state.hp, on = hp >= 3;
+    var card = "border:1px solid var(--border);background:var(--surface);border-radius:10px;";
+    var header = h("div", { style: S("display:flex;align-items:center;gap:8px;margin-bottom:12px") },
+      h("span", { style: S("width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,var(--g1),var(--g2));flex-shrink:0") }),
+      h("span", { style: S("width:50px;height:7px;border-radius:4px;background:var(--surface-2)") }),
+      h("span", { style: S("width:32px;height:7px;border-radius:4px;background:var(--surface-2)") }),
+      h("span", { style: S("margin-left:auto;width:20px;height:20px;border-radius:50%;background:var(--surface-2)") }));
+    var stat = function (w, grad) {
+      return h("div", { style: S(card + "padding:9px 10px;flex:1") },
+        h("span", { style: S("display:block;width:" + w + ";height:5px;border-radius:3px;background:var(--surface-2);margin-bottom:8px") }),
+        h("span", { style: S("display:block;width:64%;height:11px;border-radius:4px;background:" + (grad ? "linear-gradient(90deg,var(--g1),var(--g2))" : "var(--surface-2)")) }));
+    };
+    var stats = h("div", { style: S("display:flex;gap:8px;margin-bottom:11px") }, stat("55%", true), stat("48%", false), stat("60%", false));
+    var chart = h("svg", { viewBox: "0 0 320 92", preserveAspectRatio: "none", style: S("width:100%;height:66px;display:block;overflow:visible") },
+      h("defs", null, h("linearGradient", { id: "mcArea", x1: "0", y1: "0", x2: "0", y2: "1" }, h("stop", { offset: "0%", stopColor: "#22D3EE", stopOpacity: "0.32" }), h("stop", { offset: "100%", stopColor: "#22D3EE", stopOpacity: "0" }))),
+      h("path", { d: "M0 66 C40 58,58 30,98 40 S168 20,208 33 S280 12,320 26 L320 92 L0 92 Z", fill: "url(#mcArea)", style: { opacity: on ? 1 : 0, transition: "opacity .8s ease .2s" } }),
+      h("path", { d: "M0 66 C40 58,58 30,98 40 S168 20,208 33 S280 12,320 26", fill: "none", stroke: "#22D3EE", strokeWidth: "2", strokeLinecap: "round", style: { strokeDasharray: 430, strokeDashoffset: on ? 0 : 430, transition: "stroke-dashoffset 1s ease .1s", filter: "drop-shadow(0 3px 8px rgba(34,211,238,.5))" } }),
+      h("circle", { cx: "320", cy: "26", r: "3.5", fill: "#22D3EE", style: { opacity: on ? 1 : 0, transition: "opacity .3s ease .9s", animation: hp >= 6 ? "mc-pulse 1.8s infinite" : "none" } }));
+    var bars = [], bh = [50, 74, 60, 88, 66, 92, 72];
+    for (var b = 0; b < bh.length; b++) bars.push(h("span", { key: b, style: S("flex:1;height:" + bh[b] + "%;border-radius:4px 4px 0 0;transform-origin:bottom;background:" + (b % 2 ? "linear-gradient(180deg,var(--g2),var(--g1))" : "var(--surface-2)") + ";animation:" + (hp >= 6 ? "mc-breathe " + (2.4 + b * 0.2) + "s ease-in-out infinite " + (b * 0.1) + "s" : "none")) }));
+    var barBox = h("div", { style: S(card + "padding:10px 11px;margin-top:11px") }, h("div", { style: S("display:flex;align-items:flex-end;gap:6px;height:42px") }, bars));
+    var main = h("div", { style: S("flex:1;min-width:0;display:flex;flex-direction:column") }, stats, h("div", { style: S(card + "padding:10px 11px") }, chart), barBox);
+    var navRow = function (active) { return h("div", { style: S("display:flex;align-items:center;gap:7px") }, h("span", { style: S("width:8px;height:8px;border-radius:3px;background:" + (active ? "var(--accent)" : "var(--surface-2)")) }), h("span", { style: S("flex:1;height:7px;border-radius:4px;background:" + (active ? "linear-gradient(90deg,var(--g1),var(--g2))" : "var(--surface-2)")) })); };
+    var side = h("div", { style: S("width:58px;display:flex;flex-direction:column;gap:9px") }, navRow(true), navRow(false), navRow(false), navRow(false));
+    var op = on ? "1" : "0", bl = on ? "0px" : "8px", sc = on ? "1" : "0.97";
+    return h("div", { style: S("position:absolute;inset:0;padding:15px;overflow:hidden;pointer-events:none;opacity:" + op + ";filter:blur(" + bl + ");transform:scale(" + sc + ");transition:opacity .7s ease,filter .7s ease,transform .7s ease") },
+      header, h("div", { style: S("display:flex;gap:12px;flex:1;min-height:0") }, side, main));
+  }
+
+  _heroWindow(L) {
+    var h = React.createElement, S = cssObj, hp = this.state.hp, isMobile = this.state.isMobile;
+    var fname = hp >= 5 ? "merakicode.mx" : (hp >= 2 ? "build" : "app.tsx");
+    var green = hp >= 5;
+    var title = h("div", { style: S("display:flex;align-items:center;gap:7px;padding:11px 14px;border-bottom:1px solid var(--border);flex-shrink:0") },
+      this._dot("#f87171"), this._dot("#fbbf24"), this._dot("#34d399"),
+      h("span", { style: S("margin-left:8px;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--dim)") }, fname),
+      h("span", { style: S("margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:.64rem;color:" + (green ? "#6ee7b7" : "var(--dim)")) },
+        h("span", { style: S("width:6px;height:6px;border-radius:50%;background:" + (green ? "#34d399" : "var(--dim)") + (green ? ";box-shadow:0 0 0 3px rgba(52,211,153,.2);animation:mc-pulse 2s infinite" : "")) }),
+        green ? L.live : "···"));
+    var body = h("div", { style: S("position:relative;flex:1;min-height:0") }, this._codeLayer(), hp >= 1 ? this._wireLayer() : null, hp >= 2 ? this._appLayer() : null);
+    var inner = h("div", { style: S("display:flex;flex-direction:column;height:100%;border-radius:16px;border:1px solid var(--border-strong);background:var(--card);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:var(--shadow);overflow:hidden;animation:mc-rise 9s ease-in-out infinite") }, title, body);
+    return h("div", { key: "win", style: S("position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:" + (isMobile ? "100%" : "52%") + ";min-width:" + (isMobile ? "0" : "384px") + ";height:" + (isMobile ? "100%" : "74%") + ";z-index:3") }, inner);
+  }
+
+  _sat(pos, i, key, inner) {
+    var h = React.createElement, S = cssObj, on = this.state.hp >= 4;
+    return h("div", { key: key, style: S("position:absolute;z-index:4;" + pos + ";opacity:" + (on ? "1" : "0") + ";transform:" + (on ? "translateY(0) scale(1)" : "translateY(16px) scale(.92)") + ";transition:opacity .6s cubic-bezier(.22,.61,.36,1) " + (i * 0.12) + "s,transform .6s cubic-bezier(.22,.61,.36,1) " + (i * 0.12) + "s") },
+      h("div", { style: S("animation:mc-rise " + (7 + i) + "s ease-in-out infinite " + (i * 0.3) + "s") }, inner));
+  }
+
+  _satellites(L) {
+    var h = React.createElement, S = cssObj;
+    var glass = "border:1px solid var(--border-strong);background:var(--nav-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:12px;box-shadow:var(--shadow);";
+    var check = h("span", { style: S("width:22px;height:22px;border-radius:50%;background:rgba(52,211,153,.18);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0") }, h("svg", { viewBox: "0 0 24 24", width: "13", height: "13", fill: "none", stroke: "#34d399", strokeWidth: "3", strokeLinecap: "round", strokeLinejoin: "round" }, h("path", { d: "M20 6L9 17l-5-5" })));
+    var notif = this._sat("top:2%;left:-1%", 0, "notif", h("div", { style: S(glass + "display:flex;align-items:center;gap:10px;padding:11px 13px;width:180px") }, check, h("div", { style: S("flex:1") }, h("div", { style: S("font-size:.74rem;font-weight:600;color:var(--text);margin-bottom:5px") }, L.notif), h("div", { style: S("height:5px;width:70%;border-radius:3px;background:var(--surface-2)") }))));
+    var api = this._sat("top:1%;right:11%", 1, "api", h("div", { style: S(glass + "display:flex;align-items:center;gap:9px;padding:9px 14px") }, h("span", { style: S("font-family:'JetBrains Mono',monospace;font-size:.74rem;font-weight:600;color:var(--accent)") }, L.api), h("span", { style: S("width:6px;height:6px;border-radius:50%;background:#34d399;box-shadow:0 0 0 3px rgba(52,211,153,.18);animation:mc-pulse 1.8s infinite") })));
+    var cyl = h("span", { style: S("width:26px;flex-shrink:0;display:flex;flex-direction:column;gap:2px") }, h("span", { style: S("height:7px;border-radius:50%;background:linear-gradient(90deg,var(--g1),var(--g2))") }), h("span", { style: S("height:7px;border-radius:50%;background:var(--surface-2)") }), h("span", { style: S("height:7px;border-radius:50%;background:var(--surface-2)") }));
+    var db = this._sat("bottom:5%;left:1%", 2, "db", h("div", { style: S(glass + "display:flex;align-items:center;gap:10px;padding:11px 13px;width:158px") }, cyl, h("div", { style: S("flex:1") }, h("div", { style: S("font-size:.74rem;font-weight:600;color:var(--text);margin-bottom:5px") }, L.db), h("div", { style: S("height:5px;width:80%;border-radius:3px;background:var(--surface-2)") }))));
+    var phone = h("div", { style: S("width:112px;height:186px;border-radius:20px;border:1px solid var(--border-strong);background:var(--card);box-shadow:var(--shadow);padding:9px;position:relative;overflow:hidden") },
+      h("span", { style: S("position:absolute;top:7px;left:50%;transform:translateX(-50%);width:34px;height:4px;border-radius:3px;background:var(--surface-2)") }),
+      h("div", { style: S("margin-top:14px;display:flex;flex-direction:column;gap:8px") },
+        h("span", { style: S("height:9px;width:60%;border-radius:4px;background:linear-gradient(90deg,var(--g1),var(--g2))") }),
+        h("div", { style: S("border:1px solid var(--border);border-radius:9px;padding:8px;display:flex;align-items:flex-end;gap:4px;height:52px") },
+          h("span", { style: S("flex:1;height:40%;background:var(--surface-2);border-radius:3px 3px 0 0;transform-origin:bottom;animation:mc-breathe 2.6s ease-in-out infinite") }),
+          h("span", { style: S("flex:1;height:70%;background:linear-gradient(180deg,var(--g2),var(--g1));border-radius:3px 3px 0 0;transform-origin:bottom;animation:mc-breathe 2.6s ease-in-out infinite .2s") }),
+          h("span", { style: S("flex:1;height:55%;background:var(--surface-2);border-radius:3px 3px 0 0;transform-origin:bottom;animation:mc-breathe 2.6s ease-in-out infinite .4s") }),
+          h("span", { style: S("flex:1;height:85%;background:linear-gradient(180deg,var(--g2),var(--g1));border-radius:3px 3px 0 0;transform-origin:bottom;animation:mc-breathe 2.6s ease-in-out infinite .6s") })),
+        h("span", { style: S("height:7px;width:90%;border-radius:4px;background:var(--surface-2)") }),
+        h("span", { style: S("height:7px;width:70%;border-radius:4px;background:var(--surface-2)") })));
+    var mobile = this._sat("top:50%;right:-2%;margin-top:-93px", 3, "mob", phone);
+    return [notif, api, db, mobile];
+  }
+
+  _lines() {
+    var h = React.createElement, S = cssObj, on = this.state.hp >= 4;
+    var conn = function (d, i) {
+      return h("g", { key: i, style: { opacity: on ? 1 : 0, transition: "opacity .6s ease " + (i * 0.1) + "s" } },
+        h("path", { d: d, fill: "none", stroke: "var(--border-strong)", strokeWidth: "1.2" }),
+        h("path", { d: d, fill: "none", stroke: "#22D3EE", strokeWidth: "1.6", strokeLinecap: "round", strokeDasharray: "3 13", style: { animation: on ? "mc-flow 1.3s linear infinite" : "none", filter: "drop-shadow(0 0 4px rgba(34,211,238,.7))" } }));
+    };
+    return h("svg", { key: "lines", viewBox: "0 0 960 520", preserveAspectRatio: "none", "aria-hidden": "true", style: S("position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;overflow:visible") },
+      conn("M470 250 Q320 200 175 120", 0),
+      conn("M492 232 Q640 150 762 96", 1),
+      conn("M452 300 Q300 380 172 428", 2),
+      conn("M520 260 Q720 260 872 262", 3));
+  }
+
+  _deployBadge(L) {
+    var h = React.createElement, S = cssObj, on = this.state.hp >= 5, isMobile = this.state.isMobile;
+    var check = h("svg", { viewBox: "0 0 24 24", width: "15", height: "15", fill: "none", stroke: "#34d399", strokeWidth: "3", strokeLinecap: "round", strokeLinejoin: "round" }, h("path", { d: "M20 6L9 17l-5-5" }));
+    return h("div", { key: "dep", style: S("position:absolute;top:" + (isMobile ? "6px" : "10px") + ";left:50%;z-index:6;transform:translateX(-50%) " + (on ? "translateY(0) scale(1)" : "translateY(-10px) scale(.9)") + ";opacity:" + (on ? "1" : "0") + ";transition:opacity .6s cubic-bezier(.22,.61,.36,1),transform .6s cubic-bezier(.22,.61,.36,1)") },
+      h("div", { style: S("display:inline-flex;align-items:center;gap:9px;padding:8px 15px;border-radius:999px;border:1px solid rgba(52,211,153,.4);background:rgba(52,211,153,.13);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#fff;font-size:.8rem;font-weight:600;white-space:nowrap;animation:" + (on ? "mc-glowpulse 2.6s ease-in-out infinite" : "none")) },
+        check, h("span", null, L.deployed),
+        h("span", { style: S("width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.35)") }),
+        h("span", { style: S("color:#6ee7b7") }, L.production)));
+  }
+
+  renderHeroStage() {
+    var h = React.createElement, S = cssObj, isMobile = this.state.isMobile, es = this.state.lang === "es";
+    var L = es
+      ? { building: "Compilando módulos…", deployed: "Deploy exitoso", production: "En producción", db: "Base de datos", api: "API", notif: "Listo para producción", live: "En vivo" }
+      : { building: "Building modules…", deployed: "Successful deploy", production: "In production", db: "Database", api: "API", notif: "Ready for production", live: "Live" };
+    var kids = [];
+    if (!isMobile && this.state.hp >= 3) kids.push(this._lines());
+    kids.push(this._heroWindow(L));
+    if (!isMobile && this.state.hp >= 3) kids = kids.concat(this._satellites(L));
+    kids.push(this._deployBadge(L));
+    return h("div", { className: "mc-stage", style: S("position:relative;width:100%;max-width:" + (isMobile ? "430px" : "960px") + ";margin:0 auto;height:" + (isMobile ? "410px" : "clamp(440px,44vw,560px)")) }, kids);
+  }
+
+  onStackMove(e) {
+    if (this._reduced) return;
+    var stage = e.currentTarget;
+    var r = stage.getBoundingClientRect();
+    var nx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
+    var ny = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
+    if (this._raf) cancelAnimationFrame(this._raf);
+    this._raf = requestAnimationFrame(function () {
+      var max = 22;
+      var pars = stage.querySelectorAll(".mc-par");
+      for (var i = 0; i < pars.length; i++) {
+        var d = parseFloat(pars[i].getAttribute("data-par")) || 0;
+        pars[i].style.transform = "translate(" + (nx * max * d).toFixed(1) + "px," + (ny * max * d).toFixed(1) + "px)";
+      }
+    });
+  }
+  onStackLeave(e) {
+    var pars = e.currentTarget.querySelectorAll(".mc-par");
+    for (var i = 0; i < pars.length; i++) pars[i].style.transform = "";
+  }
+
+  _techIcon(key, sz) {
+    return React.createElement("svg", { viewBox: "0 0 24 24", width: sz || 30, height: sz || 30, fill: "currentColor", "aria-hidden": "true" }, React.createElement("path", { d: TECH_ICONS[key] }));
+  }
+
+  _techNode(tech, i) {
+    var h = React.createElement, S = cssObj, reduced = this._reduced;
+    var d = TECH_DEPTH[tech.depth];
+    var floats = ["mc-fl1", "mc-fl2", "mc-fl3"];
+    var dur = (8 + (i % 4) * 0.9).toFixed(1);
+    var anchor = S("position:absolute;left:" + tech.x + "%;top:" + tech.y + "%;width:66px;height:66px;margin:-33px 0 0 -33px;z-index:" + d.z);
+    anchor["--brand"] = tech.brand;
+    var cap = S("width:100%;height:100%;border-radius:18px;display:flex;align-items:center;justify-content:center;background:linear-gradient(150deg,rgba(255,255,255,.1),rgba(255,255,255,.03));border:1px solid var(--border-strong);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 10px 30px -14px rgba(0,0,0,.6);color:rgba(231,235,243,.85);transform:scale(" + d.scale + ");opacity:" + d.op);
+    var above = tech.y > 72;
+    var lbl = S("position:absolute;left:50%;" + (above ? "bottom:calc(100% + 10px);top:auto;transform:translate(-50%,-5px)" : "top:calc(100% + 10px);transform:translate(-50%,5px)") + ";white-space:nowrap;font-size:.78rem;font-weight:600;color:var(--text);background:var(--nav-bg);border:1px solid var(--border-strong);border-radius:999px;padding:5px 12px;box-shadow:var(--shadow)");
+    return h("div", { key: tech.key, className: "mc-tech", tabIndex: 0, role: "img", "aria-label": tech.name, style: anchor },
+      h("div", { className: "mc-par", "data-par": d.par, style: S("position:absolute;inset:0;transition:transform .4s cubic-bezier(.22,.61,.36,1)") },
+        h("div", { className: "mc-blur", "data-reveal": "1", "data-reveal-delay": String(120 + i * 110), style: S("position:absolute;inset:0;filter:blur(" + d.blur + "px)") },
+          h("div", { style: reduced ? S("position:absolute;inset:0") : S("position:absolute;inset:0;animation:" + floats[i % 3] + " " + dur + "s ease-in-out infinite " + (i * 0.35).toFixed(1) + "s") },
+            h("div", { className: "mc-cap", style: cap }, h("span", { className: "mc-ico", style: S("display:flex") }, this._techIcon(tech.key, 30))))),
+        h("span", { className: "mc-lbl", style: lbl }, tech.name)));
+  }
+
+  _techLines() {
+    var h = React.createElement, reduced = this._reduced, paths = [];
+    for (var i = 0; i < TECH_EDGES.length; i++) {
+      var a = TECHS[TECH_EDGES[i][0]], b = TECHS[TECH_EDGES[i][1]];
+      var d = "M" + a.x + " " + a.y + " L" + b.x + " " + b.y;
+      paths.push(h("path", { key: "b" + i, d: d, fill: "none", stroke: "var(--accent)", strokeWidth: "0.22", strokeOpacity: "0.14" }));
+      paths.push(h("path", { key: "f" + i, d: d, fill: "none", stroke: "var(--accent)", strokeWidth: "0.26", strokeOpacity: "0.55", strokeLinecap: "round", strokeDasharray: "1.4 5.5", style: { animation: reduced ? "none" : ("mc-lineflow " + (2.6 + (i % 3) * 0.5) + "s linear infinite"), filter: "drop-shadow(0 0 2px rgba(34,211,238,.6))" } }));
+    }
+    return h("svg", { key: "lines", viewBox: "0 0 100 100", preserveAspectRatio: "none", "aria-hidden": "true", style: cssObj("position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;overflow:visible") }, paths);
+  }
+
+  _techRing(size, dur, rev, dotColor) {
+    var h = React.createElement, S = cssObj, reduced = this._reduced;
+    var anim = reduced ? "none" : ((rev ? "mc-spin-rev " : "mc-spin ") + dur + "s linear infinite");
+    return h("div", { "aria-hidden": "true", style: S("position:absolute;left:50%;top:50%;width:" + size + ";height:" + size + ";margin-left:calc(" + size + " / -2);margin-top:calc(" + size + " / -2);border-radius:50%;border:1px solid rgba(255,255,255,.06);animation:" + anim) },
+      h("span", { style: S("position:absolute;top:-3px;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:" + dotColor + ";box-shadow:0 0 10px 1px " + dotColor) }));
+  }
+
+  _techParticles() {
+    var h = React.createElement, S = cssObj, reduced = this._reduced, out = [];
+    var P = [[12,20,3,"var(--accent)",.5,15],[86,28,2,"var(--primary)",.45,18],[22,74,3,"var(--accent)",.4,20],[78,80,2,"var(--accent)",.45,17],[50,16,2,"var(--primary)",.4,16],[8,50,2,"var(--accent)",.4,21],[92,58,3,"var(--primary)",.35,19],[40,88,2,"var(--accent)",.4,22],[64,10,2,"var(--accent)",.35,16],[33,40,2,"var(--primary)",.3,23]];
+    for (var i = 0; i < P.length; i++) {
+      var p = P[i];
+      out.push(h("span", { key: i, "aria-hidden": "true", style: S("position:absolute;left:" + p[0] + "%;top:" + p[1] + "%;width:" + p[2] + "px;height:" + p[2] + "px;border-radius:50%;background:" + p[3] + ";opacity:" + p[4] + (reduced ? "" : ";animation:mc-drift " + p[5] + "s ease-in-out infinite " + (i * 0.4) + "s")) }));
+    }
+    return h("div", { key: "particles", "aria-hidden": "true", style: S("position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden") }, out);
+  }
+
+  renderStackViz() {
+    var h = React.createElement, S = cssObj, reduced = this._reduced;
+    if (this.state.isMobile) {
+      var chips = TECHS.map(function (tech, i) {
+        var st = S("display:flex;flex-direction:column;align-items:center;gap:9px;width:84px");
+        var floatWrap = reduced ? S("") : S("animation:mc-fl" + ((i % 3) + 1) + " " + (8 + (i % 4)) + "s ease-in-out infinite " + (i * 0.3).toFixed(1) + "s");
+        return h("div", { key: tech.key, "data-reveal": "1", "data-reveal-delay": String(80 + i * 80), style: st },
+          h("div", { style: floatWrap },
+            h("div", { style: S("width:60px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border-strong);box-shadow:0 10px 26px -16px rgba(0,0,0,.6);color:" + tech.brand) }, this._techIcon(tech.key, 28))),
+          h("span", { style: S("font-size:.76rem;font-weight:600;color:var(--muted)") }, tech.name));
+      });
+      return h("div", { style: S("display:flex;flex-wrap:wrap;justify-content:center;gap:18px 10px;max-width:400px;margin:0 auto") }, chips);
+    }
+    var nodes = TECHS.map((tech, i) => this._techNode(tech, i));
+    return h("div", { onMouseMove: (e) => this.onStackMove(e), onMouseLeave: (e) => this.onStackLeave(e), style: S("position:relative;width:100%;max-width:1000px;margin:0 auto;height:clamp(500px,52vw,600px)") },
+      h("div", { key: "core", "aria-hidden": "true", style: S("position:absolute;left:50%;top:50%;width:min(560px,80%);height:340px;transform:translate(-50%,-50%);z-index:0;background:radial-gradient(50% 50% at 50% 50%,rgba(34,211,238,.14),rgba(37,99,235,.08) 45%,transparent 72%);filter:blur(10px);" + (reduced ? "" : "animation:mc-pulse 6s ease-in-out infinite")) }),
+      this._techRing("clamp(300px,34vw,420px)", 46, false, "rgba(34,211,238,.7)"),
+      this._techRing("clamp(470px,54vw,660px)", 68, true, "rgba(37,99,235,.7)"),
+      this._techParticles(),
+      this._techLines(),
+      nodes);
+  }
+
+  renderVals() {
+    const lang = this.state.lang;
+    const T = t[lang];
+    const isDark = this.state.theme === "dark";
+    const active = "border:0;cursor:pointer;padding:5px 10px;border-radius:7px;font-size:.72rem;font-weight:700;letter-spacing:.05em;background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;transition:all .2s;";
+    const idle = "border:0;cursor:pointer;padding:5px 10px;border-radius:7px;font-size:.72rem;font-weight:600;letter-spacing:.05em;background:transparent;color:var(--muted);transition:all .2s;";
+    const faqRows = (T.faq.items || []).map((it, i) => ({ q: it.q, a: it.a, isOpen: this.state.openFaq === i, closed: this.state.openFaq !== i, toggle: () => this.toggleFaq(i) }));
+    return {
+      T, lang,
+      isEs: lang === "es", isEn: lang === "en",
+      isDark, isLight: !isDark,
+      isMobile: this.state.isMobile, isDesktop: !this.state.isMobile,
+      showGrid: this.props.showGrid !== false, showGlow: this.props.showGlow !== false,
+      stackViz: this.renderStackViz(),
+      heroStage: this.renderHeroStage(),
+      onCtaMove: (e) => this.onCtaMove(e),
+      onCtaLeave: (e) => this.onCtaLeave(e),
+      menuOpen: this.state.menuOpen, menuClosed: !this.state.menuOpen,
+      navRef: this.navRef,
+      year: new Date().getFullYear(),
+      langEsStyle: lang === "es" ? active : idle,
+      langEnStyle: lang === "en" ? active : idle,
+      setEs: () => this.setLang("es"),
+      setEn: () => this.setLang("en"),
+      toggleTheme: () => this.toggleTheme(),
+      toggleMenu: () => this.toggleMenu(),
+      closeMenu: () => this.closeMenu(),
+      faqRows,
+      waHero: this.wa(T.wa.hero),
+      waNav: this.wa(T.wa.nav),
+      waContact: this.wa(T.wa.contact),
+      waEsencial: this.wa(T.wa.planEsencial),
+      waPro: this.wa(T.wa.planPro),
+      waCustom: this.wa(T.wa.planCustom),
+      form: this.state.form, sent: this.state.sent,
+      onName: this.onField("name"), onEmail: this.onField("email"), onMessage: this.onField("message"),
+      onSubmit: (e) => this.submitForm(e)
+    };
+  }
+}
+</script>
+</body>
+</html>

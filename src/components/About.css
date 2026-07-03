@@ -1,0 +1,29 @@
+.mc-about-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 22px;
+  background: var(--card);
+  text-align: center;
+  transition: transform .25s, border-color .25s;
+}
+.mc-about-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-strong);
+}
+
+.mc-about-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  transition: color .2s, border-color .2s;
+}
+.mc-about-social:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}

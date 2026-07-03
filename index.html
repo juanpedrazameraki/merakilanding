@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>MerakiCode — Desarrollo de software, web, apps y SaaS a la medida</title>
+    <meta
+      name="description"
+      content="Estudio de desarrollo de software. Creamos sitios web, aplicaciones y plataformas SaaS a la medida para startups y PYMEs. Escríbenos por WhatsApp."
+    />
+    <script>
+      (function () {
+        try {
+          var s = localStorage.getItem('merakicode-theme');
+          var d =
+            s === 'light' || s === 'dark'
+              ? s
+              : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          document.documentElement.setAttribute('data-theme', d);
+          var l = localStorage.getItem('merakicode-lang');
+          var lang =
+            l === 'es' || l === 'en'
+              ? l
+              : (navigator.language || '').toLowerCase().indexOf('en') === 0
+                ? 'en'
+                : 'es';
+          document.documentElement.setAttribute('lang', lang);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

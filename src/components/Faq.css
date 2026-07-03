@@ -1,0 +1,11 @@
+.mc-faq-row {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.mc-faq-row:hover {
+  border-color: var(--border-strong);
+}

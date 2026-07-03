@@ -1,0 +1,44 @@
+/* Sección Pricing — elementos con style-hover del original (CSS no puede
+   sobreescribir estilos inline, por eso base + hover viven aquí). */
+
+/* CTA "fantasma" (planes Esencial y A medida) */
+.mc-price-cta-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 18px;
+  border-radius: 11px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: .95rem;
+  transition: border-color .2s, background .2s;
+}
+.mc-price-cta-ghost:hover {
+  border-color: var(--accent);
+  background: var(--surface-2);
+}
+
+/* CTA gradiente (plan Profesional) */
+.mc-price-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 18px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, var(--g1), var(--g2));
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: .95rem;
+  box-shadow: 0 12px 30px -12px rgba(34, 211, 238, .8);
+  transition: transform .2s, box-shadow .2s;
+}
+.mc-price-cta-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px -12px rgba(34, 211, 238, .95);
+}
