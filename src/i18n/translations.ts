@@ -33,6 +33,8 @@ export interface Translation {
     menu: string;
     langLabel: string;
     themeLabel: string;
+    settings: string;
+    waFab: string;
   };
   hero: {
     badge: string;
@@ -156,6 +158,8 @@ const es: Translation = {
     menu: 'Menú',
     langLabel: 'Cambiar idioma',
     themeLabel: 'Cambiar tema',
+    settings: 'Ajustes',
+    waFab: 'Escríbenos por WhatsApp',
   },
   hero: {
     badge: 'Estudio de desarrollo de software',
@@ -378,6 +382,8 @@ const en: Translation = {
     menu: 'Menu',
     langLabel: 'Change language',
     themeLabel: 'Toggle theme',
+    settings: 'Settings',
+    waFab: 'Message us on WhatsApp',
   },
   hero: {
     badge: 'Software development studio',

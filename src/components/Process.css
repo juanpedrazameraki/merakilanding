@@ -1,0 +1,282 @@
+/* Línea de tiempo "La Línea Viva".
+   Reglas de ownership (idénticas al resto del sitio):
+   - GSAP es dueño EXCLUSIVO de opacity/transform en los nodos que anima
+     ([data-proc-node], [data-proc-num], [data-proc-body], la barra y la chispa).
+     Esas props nunca se tocan desde CSS :hover.
+   - El hover (glow, elevación, color de icono, anillo de pulso) vive 100% en CSS
+     y actúa sobre elementos DISTINTOS a los que anima GSAP para no colisionar.
+   - El DOM autorado es el estado final sólido (== estado reduced-motion): barra
+     llena, nodos/números/textos visibles; la chispa arranca oculta. */
+
+.mc-proc {
+  --node: 54px;
+  --pad-t: 20px;
+  --gap: 22px;
+}
+
+/* Escritorio: la sección "atrapa" la pantalla completa mientras se fija (pin).
+   Solo cuando hay movimiento permitido; en reduced-motion queda con alto natural. */
+@media (min-width: 861px) and (prefers-reduced-motion: no-preference) {
+  .mc-proc {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+}
+.mc-proc-inner {
+  width: 100%;
+}
+
+.mc-proc-track {
+  position: relative;
+}
+
+/* ---- Riel horizontal (desktop) ---- */
+.mc-proc-rail {
+  position: absolute;
+  z-index: 0; /* detrás de la grilla: los nodos opacos ocultan la línea */
+  top: calc(var(--pad-t) + var(--node) / 2);
+  left: calc(12.5% - 0.375 * var(--gap)); /* centro del 1er nodo */
+  right: calc(12.5% - 0.375 * var(--gap)); /* centro del 4º nodo */
+  height: 3px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.mc-proc-rail-base {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--border-strong);
+  opacity: 0.55;
+}
+
+.mc-proc-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--g1), var(--g2));
+  transform-origin: left center;
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.45);
+  /* Estado autorado = lleno; GSAP colapsa con scaleX(0) y lo anima */
+}
+
+.mc-proc-spark {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, #fff 0%, var(--g2) 55%, transparent 72%);
+  box-shadow:
+    0 0 14px 3px var(--glow-2),
+    0 0 26px 6px var(--glow-1);
+  opacity: 0; /* solo GSAP la muestra */
+  pointer-events: none;
+}
+
+/* ---- Grilla de pasos ---- */
+.mc-proc-grid {
+  position: relative;
+  z-index: 1; /* por encima del riel */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--gap);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mc-proc-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--pad-t) 14px 22px;
+  cursor: default;
+}
+
+/* Panel que se ilumina al pasar el ratón (degradado de marca) */
+.mc-proc-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 18px;
+  background: linear-gradient(
+    155deg,
+    rgba(37, 99, 235, 0.16),
+    rgba(34, 211, 238, 0.1) 55%,
+    transparent
+  );
+  border: 1px solid transparent;
+  opacity: 0;
+  transition:
+    opacity 0.4s ease,
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+  pointer-events: none;
+}
+.mc-proc-step:hover .mc-proc-glow {
+  opacity: 1;
+  border-color: rgba(34, 211, 238, 0.28);
+  box-shadow: 0 24px 54px -28px rgba(34, 211, 238, 0.55);
+}
+
+/* Envoltorio del nodo: aquí vive la elevación en hover (GSAP no lo toca) */
+.mc-proc-nodewrap {
+  position: relative;
+  z-index: 2;
+  height: var(--node);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.mc-proc-step:hover .mc-proc-nodewrap {
+  transform: translateY(-5px);
+}
+
+/* Caja del icono: OPACA (base bg-soft) para que el riel quede detrás y la línea
+   parezca conectar los nodos por sus bordes. GSAP anima su scale/rotate/opacity. */
+.mc-proc-node {
+  position: relative;
+  width: var(--node);
+  height: var(--node);
+  border-radius: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  border: 1px solid var(--border-strong);
+  background:
+    linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(34, 211, 238, 0.16)),
+    var(--bg-soft);
+  transition:
+    color 0.3s ease,
+    border-color 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.mc-proc-step:hover .mc-proc-node {
+  color: #eafcff;
+  border-color: var(--accent);
+  background:
+    linear-gradient(135deg, rgba(37, 99, 235, 0.36), rgba(34, 211, 238, 0.32)),
+    var(--bg-soft);
+  box-shadow:
+    0 0 0 1px rgba(34, 211, 238, 0.4),
+    0 14px 32px -10px rgba(34, 211, 238, 0.55);
+}
+.mc-proc-node svg {
+  transition: filter 0.3s ease;
+}
+.mc-proc-step:hover .mc-proc-node svg {
+  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.75));
+}
+
+/* Anillo de pulso en hover (pseudo-elemento: no colisiona con el transform de GSAP) */
+.mc-proc-node::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1.5px solid var(--accent);
+  opacity: 0;
+  pointer-events: none;
+}
+.mc-proc-step:hover .mc-proc-node::after {
+  animation: mc-procpulse 1.5s ease-out infinite;
+}
+@keyframes mc-procpulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.65);
+  }
+}
+
+/* Contenido textual */
+.mc-proc-content {
+  position: relative;
+  z-index: 2;
+}
+.mc-proc-num {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  margin: 15px 0 9px;
+  color: transparent;
+  background: linear-gradient(135deg, var(--g1), var(--g2));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.mc-proc-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 8px;
+  transition: color 0.3s ease;
+}
+.mc-proc-step:hover .mc-proc-title {
+  color: var(--accent);
+}
+.mc-proc-desc {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ---- Móvil: la línea de tiempo se vuelve vertical ---- */
+@media (max-width: 860px) {
+  .mc-proc-grid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .mc-proc-step {
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: left;
+    gap: 18px;
+    padding: var(--pad-t) 14px 24px;
+  }
+  .mc-proc-nodewrap {
+    flex: 0 0 var(--node);
+  }
+  .mc-proc-step:hover .mc-proc-nodewrap {
+    transform: translateX(4px);
+  }
+  .mc-proc-content {
+    flex: 1;
+    min-width: 0;
+  }
+  .mc-proc-num {
+    margin-top: 2px;
+  }
+
+  .mc-proc-rail {
+    top: calc(var(--pad-t) + var(--node) / 2);
+    bottom: 24px;
+    left: calc(14px + var(--node) / 2); /* padding-left + medio nodo */
+    right: auto;
+    width: 3px;
+    height: auto;
+    transform: translateX(-50%);
+  }
+  .mc-proc-fill {
+    background: linear-gradient(180deg, var(--g1), var(--g2));
+    transform-origin: center top;
+  }
+  .mc-proc-spark {
+    top: 0;
+    left: 50%;
+  }
+}

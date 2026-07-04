@@ -24,8 +24,8 @@
 
 @media (max-width: 1023px) {
   .mc-hero-stagewrap {
-    height: min(34vh, 320px);
-    height: min(34svh, 320px);
+    height: min(38vh, 360px);
+    height: min(38svh, 360px);
   }
   /* En apilado (tablet/móvil) la ventana es baja: fuera la gráfica secundaria */
   .mc-stage-jag {
@@ -33,9 +33,10 @@
   }
 }
 @media (max-width: 880px) {
+  /* Más alto en móvil para que la gráfica no se pierda */
   .mc-hero-stagewrap {
-    height: min(32vh, 300px);
-    height: min(32svh, 300px);
+    height: min(46vh, 400px);
+    height: min(46svh, 400px);
   }
 }
 

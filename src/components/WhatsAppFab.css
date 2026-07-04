@@ -1,0 +1,85 @@
+.mc-wafab {
+  position: fixed;
+  right: clamp(16px, 3vw, 26px);
+  bottom: clamp(16px, 3vw, 26px);
+  z-index: 60;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--g1), var(--g2));
+  box-shadow:
+    0 14px 34px -10px rgba(34, 211, 238, 0.6),
+    0 6px 16px -6px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.25s ease;
+}
+.mc-wafab:hover {
+  transform: translateY(-3px) scale(1.06);
+  box-shadow:
+    0 20px 44px -10px rgba(34, 211, 238, 0.78),
+    0 8px 20px -6px rgba(0, 0, 0, 0.45);
+}
+.mc-wafab svg {
+  position: relative;
+  z-index: 1;
+}
+
+/* Anillo de pulso que llama la atención (respeta reduced-motion global) */
+.mc-wafab-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--g1), var(--g2));
+  z-index: 0;
+  animation: mc-wafab-pulse 2.6s ease-out infinite;
+}
+@keyframes mc-wafab-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  70%,
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+/* Etiqueta que aparece al pasar el ratón */
+.mc-wafab-label {
+  position: absolute;
+  right: calc(100% + 12px);
+  top: 50%;
+  white-space: nowrap;
+  background: var(--nav-bg);
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 7px 12px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow: 0 12px 30px -14px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%) translateX(6px);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.mc-wafab:hover .mc-wafab-label {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* En pantallas muy angostas ocultamos la etiqueta (no hay espacio) */
+@media (max-width: 480px) {
+  .mc-wafab-label {
+    display: none;
+  }
+}

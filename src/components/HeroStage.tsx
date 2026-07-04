@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type CSSProperties, type ReactElement } from 'react';
-import { useSite } from '../context/SiteContext';
+import { useSite, useMediaFlag } from '../context/SiteContext';
 import type { Lang } from '../i18n/translations';
 import { genSeries, linePath, areaPath, endOf } from '../utils/chartPaths';
 
@@ -55,7 +55,9 @@ interface StageLabels {
 }
 
 export default function HeroStage() {
-  const { lang, reducedMotion } = useSite();
+  const { lang, reducedMotion, theme } = useSite();
+  const compact = useMediaFlag('(max-width: 880px)');
+  const light = theme === 'light';
   const [hp, setHp] = useState(0);
   const [typed, setTyped] = useState(0);
   const [cmd, setCmd] = useState(0);
@@ -268,7 +270,7 @@ export default function HeroStage() {
     const on = hp >= 3;
     const card: CSSProperties = { border: '1px solid var(--border)', background: 'var(--surface)', borderRadius: '10px' };
     const header = (
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: compact ? '9px' : '12px' }}>
         <span style={{ width: '20px', height: '20px', borderRadius: '6px', background: 'linear-gradient(135deg,var(--g1),var(--g2))', flexShrink: 0 }} />
         <span style={{ fontSize: '.68rem', fontWeight: 700, letterSpacing: '-.01em', color: 'var(--text)', whiteSpace: 'nowrap' }}>
           Meraki<span style={{ color: 'var(--accent)' }}>Code</span>
@@ -280,7 +282,7 @@ export default function HeroStage() {
       </div>
     );
     const stat = (s: { label: string; value: string }, grad: boolean) => (
-      <div key={s.label} style={{ ...card, padding: '8px 10px', flex: '1', minWidth: 0 }}>
+      <div key={s.label} style={{ ...card, padding: compact ? '6px 9px' : '8px 10px', flex: '1', minWidth: 0 }}>
         <span
           style={{
             display: 'block',
@@ -318,7 +320,7 @@ export default function HeroStage() {
       </div>
     );
     const stats = (
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '11px' }}>
+      <div style={{ display: 'flex', gap: '8px', marginBottom: compact ? '8px' : '11px' }}>
         {L.stats.map((s, i) => stat(s, i === 0))}
       </div>
     );
@@ -522,7 +524,7 @@ export default function HeroStage() {
         style={{
           position: 'absolute',
           inset: '0',
-          padding: '15px',
+          padding: compact ? '12px 13px' : '15px',
           overflow: 'hidden',
           pointerEvents: 'none',
           display: 'flex',
@@ -534,8 +536,9 @@ export default function HeroStage() {
         }}
       >
         {header}
-        <div style={{ display: 'flex', gap: '12px', flex: '1', minHeight: '0' }}>
-          {side}
+        <div style={{ display: 'flex', gap: compact ? 0 : '12px', flex: '1', minHeight: '0' }}>
+          {/* En móvil ocultamos la barra lateral: la gráfica ocupa todo el ancho */}
+          {compact ? null : side}
           {main}
         </div>
       </div>
@@ -595,7 +598,7 @@ export default function HeroStage() {
       </div>
     );
     return (
-      <div key="win" style={{ position: 'absolute', inset: '44px 0 0', zIndex: 3 }}>
+      <div key="win" style={{ position: 'absolute', inset: compact ? '34px 0 0' : '44px 0 0', zIndex: 3 }}>
         {inner}
       </div>
     );
@@ -604,7 +607,7 @@ export default function HeroStage() {
   const deployBadge = (L: StageLabels) => {
     const on = hp >= 5;
     const check = (
-      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#34d399" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke={light ? '#059669' : '#34d399'} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20 6L9 17l-5-5" />
       </svg>
     );
@@ -628,11 +631,11 @@ export default function HeroStage() {
             gap: '9px',
             padding: '8px 15px',
             borderRadius: '999px',
-            border: '1px solid rgba(52,211,153,.4)',
-            background: 'rgba(52,211,153,.13)',
+            border: light ? '1px solid rgba(5,150,105,.45)' : '1px solid rgba(52,211,153,.4)',
+            background: light ? 'rgba(52,211,153,.18)' : 'rgba(52,211,153,.13)',
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)',
-            color: '#fff',
+            color: light ? '#065f46' : '#fff',
             fontSize: '.8rem',
             fontWeight: 600,
             whiteSpace: 'nowrap',
@@ -641,8 +644,15 @@ export default function HeroStage() {
         >
           {check}
           <span>{L.deployed}</span>
-          <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: 'rgba(255,255,255,.35)' }} />
-          <span style={{ color: '#6ee7b7' }}>{L.production}</span>
+          <span
+            style={{
+              width: '4px',
+              height: '4px',
+              borderRadius: '50%',
+              background: light ? 'rgba(5,150,105,.5)' : 'rgba(255,255,255,.35)',
+            }}
+          />
+          <span style={{ color: light ? '#047857' : '#6ee7b7' }}>{L.production}</span>
         </div>
       </div>
     );

@@ -1,23 +1,22 @@
-/* Navbar — elementos con style-hover en el original: el estilo base vive aquí
-   (CSS no puede sobreescribir estilos inline). Valores idénticos al diseño. */
+/* Navbar — estilos base (los hover no pueden vivir en estilos inline). */
 
-/* Links de navegación desktop (original líneas 77-82) */
+/* Links de navegación desktop */
 .mc-nav-link {
   padding: 8px 12px;
   border-radius: 9px;
   color: var(--muted);
   text-decoration: none;
-  font-size: .92rem;
+  font-size: 0.92rem;
   font-weight: 500;
-  transition: color .2s, background .2s;
+  transition: color 0.2s, background 0.2s;
 }
 .mc-nav-link:hover {
   color: var(--text);
   background: var(--surface);
 }
 
-/* Botón de tema (original línea 92) */
-.mc-nav-theme {
+/* Botón de icono (ajustes / hamburguesa) */
+.mc-nav-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -28,29 +27,215 @@
   background: var(--surface);
   color: var(--text);
   cursor: pointer;
-  transition: all .2s;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
 }
-.mc-nav-theme:hover {
+.mc-nav-icon:hover {
   border-color: var(--border-strong);
   color: var(--accent);
 }
+.mc-nav-icon[aria-expanded='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--surface-2);
+}
+/* La rueda de ajustes gira suavemente al abrir */
+.mc-nav-gear svg {
+  transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.mc-nav-gear[aria-expanded='true'] svg {
+  transform: rotate(90deg);
+}
 
-/* CTA WhatsApp desktop (original línea 102) */
-.mc-nav-cta {
+/* Contenedor de ajustes (ancla del submenú) */
+.mc-settings {
+  position: relative;
+}
+
+/* Panel del submenú (idioma + tema) — abre con animación delicada */
+.mc-settings-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 170px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--nav-bg);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: 0 22px 48px -22px rgba(0, 0, 0, 0.55);
+  transform-origin: top right;
+  opacity: 0;
+  transform: translateY(-8px) scale(0.96);
+  pointer-events: none;
+  transition:
+    opacity 0.22s ease,
+    transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+  z-index: 80;
+}
+.mc-settings-panel.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.mc-settings-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+}
+.mc-settings-icn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 9px 16px;
+  justify-content: center;
+  width: 24px;
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+
+/* Control segmentado (idioma / tema) */
+.mc-seg {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border: 1px solid var(--border);
   border-radius: 10px;
+  background: var(--surface);
+}
+.mc-seg-btn {
+  border: 0;
+  cursor: pointer;
+  padding: 5px 12px;
+  border-radius: 7px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, background 0.2s;
+}
+.mc-seg-btn:hover {
+  color: var(--text);
+}
+.mc-seg-btn.active {
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--g1), var(--g2));
+}
+.mc-seg-icn {
+  padding: 6px 13px;
+}
+
+/* WhatsApp en la barra: pastilla con texto en pantallas amplias, solo icono
+   cuando el espacio aprieta (≤1080px) para que la barra nunca se corte. */
+.mc-nav-wa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 11px;
   background: linear-gradient(135deg, var(--g1), var(--g2));
   color: #fff;
   text-decoration: none;
   font-weight: 600;
-  font-size: .92rem;
-  box-shadow: 0 8px 24px -11px rgba(34, 211, 238, .75);
-  transition: transform .2s, box-shadow .2s;
+  font-size: 0.92rem;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px -11px rgba(34, 211, 238, 0.75);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
-.mc-nav-cta:hover {
+.mc-nav-wa:hover {
   transform: translateY(-1px);
-  box-shadow: 0 12px 30px -10px rgba(34, 211, 238, .9);
+  box-shadow: 0 12px 30px -10px rgba(34, 211, 238, 0.9);
+}
+@media (max-width: 1080px) {
+  .mc-nav-wa {
+    gap: 0;
+    width: 40px;
+    padding: 0;
+  }
+  .mc-nav-wa-label {
+    display: none;
+  }
+}
+
+/* ————— Menú móvil como sheet lateral ————— */
+.mc-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 62; /* sobre el contenido y el FAB (60), bajo la barra (70) */
+  background: rgba(4, 8, 16, 0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.32s ease;
+}
+.mc-drawer-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.mc-drawer {
+  position: fixed;
+  top: 66px; /* justo debajo de la barra (66px), no detrás del logo */
+  right: 0;
+  bottom: 0;
+  z-index: 64; /* sobre el backdrop (62), bajo la barra (70) */
+  width: min(84vw, 330px);
+  padding: 16px 18px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--bg-soft);
+  border-left: 1px solid var(--border);
+  box-shadow: -24px 0 60px -24px rgba(0, 0, 0, 0.6);
+  transform: translateX(100%);
+  visibility: hidden;
+  transition:
+    transform 0.36s cubic-bezier(0.22, 0.61, 0.36, 1),
+    visibility 0s linear 0.36s;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.mc-drawer.open {
+  transform: translateX(0);
+  visibility: visible;
+  transition:
+    transform 0.36s cubic-bezier(0.22, 0.61, 0.36, 1),
+    visibility 0s;
+}
+.mc-drawer-link {
+  padding: 13px 10px;
+  border-radius: 10px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 1.02rem;
+  font-weight: 500;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s, color 0.2s;
+}
+.mc-drawer-link:hover {
+  background: var(--surface);
+  color: var(--accent);
+}
+.mc-drawer-cta {
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 16px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, var(--g1), var(--g2));
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
 }

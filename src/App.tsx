@@ -11,6 +11,7 @@ import About from './components/About';
 import Faq from './components/Faq';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import WhatsAppFab from './components/WhatsAppFab';
 
 function Shell() {
   useReveal();
@@ -37,6 +38,7 @@ function Shell() {
         <Contact />
       </main>
       <Footer />
+      <WhatsAppFab />
     </div>
   );
 }
