@@ -616,7 +616,8 @@ export default function HeroStage() {
         key="dep"
         style={{
           position: 'absolute',
-          top: 0,
+          // En móvil lo subimos para que no quede pegado a la tarjeta del panel.
+          top: compact ? -14 : 0,
           left: '50%',
           zIndex: 6,
           transform: `translateX(-50%) ${on ? 'translateY(0) scale(1)' : 'translateY(-10px) scale(.9)'}`,
