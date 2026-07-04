@@ -5,6 +5,12 @@ interface TitledItem {
   desc: string;
 }
 
+interface ServiceItem {
+  title: string;
+  desc: string;
+  chips: string[];
+}
+
 interface PricingPlan {
   name: string;
   tag: string;
@@ -30,7 +36,9 @@ export interface Translation {
   };
   hero: {
     badge: string;
-    title: string;
+    titlePrefix: string;
+    titleRotating: string[];
+    titleSuffix: string;
     subtitle: string;
     ctaPrimary: string;
     ctaSecondary: string;
@@ -41,9 +49,10 @@ export interface Translation {
     eyebrow: string;
     heading: string;
     sub: string;
-    web: TitledItem;
-    saas: TitledItem;
-    custom: TitledItem;
+    cta: string;
+    web: ServiceItem;
+    saas: ServiceItem;
+    custom: ServiceItem;
   };
   process: {
     eyebrow: string;
@@ -120,6 +129,9 @@ export interface Translation {
     hero: string;
     nav: string;
     contact: string;
+    svcWeb: string;
+    svcSaas: string;
+    svcCustom: string;
     planEsencial: string;
     planPro: string;
     planCustom: string;
@@ -147,9 +159,10 @@ const es: Translation = {
   },
   hero: {
     badge: 'Estudio de desarrollo de software',
-    title: 'Desarrollamos el software que tu empresa necesita.',
-    subtitle:
-      'Sitios web, aplicaciones y plataformas SaaS a la medida, con tecnología moderna y acompañamiento cercano.',
+    titlePrefix: 'Creamos',
+    titleRotating: ['sitios web', 'plataformas SaaS', 'apps móviles', 'software a la medida'],
+    titleSuffix: 'que tu empresa necesita.',
+    subtitle: 'De la idea a producción, con tecnología moderna y acompañamiento cercano.',
     ctaPrimary: 'Escríbenos por WhatsApp',
     ctaSecondary: 'Ver servicios',
     trust: 'Respondemos en menos de 24 h · Sin compromiso',
@@ -159,17 +172,21 @@ const es: Translation = {
     eyebrow: 'Servicios',
     heading: 'Lo que construimos para ti',
     sub: 'Soluciones digitales end-to-end, desde la idea hasta producción.',
+    cta: 'Cotizar por WhatsApp',
     web: {
       title: 'Sitios web y landing pages',
       desc: 'Webs corporativas, landings y portafolios rápidos, responsivos y pensados para convertir.',
+      chips: ['Landings', 'Sitios corporativos', 'SEO técnico', 'Carga rápida'],
     },
     saas: {
       title: 'SaaS y aplicaciones web',
       desc: 'Plataformas, dashboards y sistemas web a la medida, escalables y seguros.',
+      chips: ['Dashboards', 'Multiusuario', 'Pagos y auth', 'Escalable'],
     },
     custom: {
       title: 'Software a medida e integraciones',
       desc: 'Automatizaciones, APIs e integraciones que conectan tus herramientas.',
+      chips: ['Integraciones', 'APIs', 'Automatización', 'ERP / CRM'],
     },
   },
   process: {
@@ -331,6 +348,9 @@ const es: Translation = {
     hero: 'Hola MerakiCode, vi su sitio y me interesa desarrollar un proyecto. ¿Podemos platicar?',
     nav: 'Hola MerakiCode, me gustaría más información.',
     contact: 'Hola MerakiCode, quiero iniciar un proyecto.',
+    svcWeb: 'Hola MerakiCode, me interesa un sitio web o landing page. ¿Podemos platicar?',
+    svcSaas: 'Hola MerakiCode, me interesa desarrollar una plataforma SaaS o aplicación web. ¿Podemos platicar?',
+    svcCustom: 'Hola MerakiCode, necesito software a medida o integraciones para mi negocio. ¿Podemos platicar?',
     planEsencial:
       'Hola MerakiCode, me interesa el plan Esencial (sitio web / landing). ¿Me pueden dar más información?',
     planPro:
@@ -361,9 +381,10 @@ const en: Translation = {
   },
   hero: {
     badge: 'Software development studio',
-    title: 'We build the software your business needs.',
-    subtitle:
-      'Custom websites, applications and SaaS platforms, built with modern technology and close, hands-on support.',
+    titlePrefix: 'We build',
+    titleRotating: ['websites', 'SaaS platforms', 'mobile apps', 'custom software'],
+    titleSuffix: 'that your business needs.',
+    subtitle: 'From idea to production, with modern technology and hands-on support.',
     ctaPrimary: 'Message us on WhatsApp',
     ctaSecondary: 'See services',
     trust: 'We reply within 24h · No commitment',
@@ -373,17 +394,21 @@ const en: Translation = {
     eyebrow: 'Services',
     heading: 'What we build for you',
     sub: 'End-to-end digital solutions, from idea to production.',
+    cta: 'Get a quote on WhatsApp',
     web: {
       title: 'Websites & landing pages',
       desc: 'Corporate sites, landing pages and portfolios that are fast, responsive and built to convert.',
+      chips: ['Landing pages', 'Corporate sites', 'Technical SEO', 'Fast loading'],
     },
     saas: {
       title: 'SaaS & web applications',
       desc: 'Custom platforms, dashboards and web systems — scalable and secure.',
+      chips: ['Dashboards', 'Multi-tenant', 'Payments & auth', 'Built to scale'],
     },
     custom: {
       title: 'Custom software & integrations',
       desc: 'Automations, APIs and integrations that connect your tools.',
+      chips: ['Integrations', 'APIs', 'Automation', 'ERP / CRM'],
     },
   },
   process: {
@@ -545,6 +570,9 @@ const en: Translation = {
     hero: "Hi MerakiCode, I saw your site and I'm interested in building a project. Can we talk?",
     nav: "Hi MerakiCode, I'd like more information.",
     contact: 'Hi MerakiCode, I want to start a project.',
+    svcWeb: "Hi MerakiCode, I'm interested in a website or landing page. Can we talk?",
+    svcSaas: "Hi MerakiCode, I'd like to build a SaaS platform or web app. Can we talk?",
+    svcCustom: 'Hi MerakiCode, I need custom software or integrations for my business. Can we talk?',
     planEsencial:
       "Hi MerakiCode, I'm interested in the Essential plan (website / landing). Could you share more info?",
     planPro:

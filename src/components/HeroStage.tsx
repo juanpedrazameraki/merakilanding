@@ -1,44 +1,78 @@
-import { useEffect, useState, type CSSProperties, type ReactElement, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties, type ReactElement } from 'react';
 import { useSite } from '../context/SiteContext';
+import type { Lang } from '../i18n/translations';
+import { genSeries, linePath, areaPath, endOf } from '../utils/chartPaths';
 
 type HeroToken = [string, string];
 
-const HERO_CODE: HeroToken[][] = [
+const BASE_CODE: HeroToken[][] = [
   [['const', '#c084fc'], [' app ', '#E7EBF3'], ['= ', '#7C8598'], ['createApp', '#22D3EE'], ['({', '#7C8598']],
   [['  name', '#93c5fd'], [': ', '#7C8598'], ['"MerakiCode"', '#86efac'], [',', '#7C8598']],
   [['  modules', '#93c5fd'], [': [', '#7C8598'], ['"web"', '#86efac'], [', ', '#7C8598'], ['"saas"', '#86efac'], [', ', '#7C8598'], ['"api"', '#86efac'], ['],', '#7C8598']],
   [['});', '#7C8598']],
   [['await', '#c084fc'], [' app', '#E7EBF3'], ['.', '#7C8598'], ['deploy', '#22D3EE'], ['();', '#7C8598']],
 ];
-const HERO_CODE_LEN = HERO_CODE.reduce((a, l) => a + l.reduce((b, tk) => b + tk[0].length, 0), 0);
+const COMMENT_COLOR = '#6a9955';
+function heroCode(lang: Lang): HeroToken[][] {
+  return [
+    ...BASE_CODE,
+    [[lang === 'es' ? '// hecho con meraki' : '// made with meraki', COMMENT_COLOR]],
+  ];
+}
 const HERO_CMD = 'npm run build';
+const DWELL_MS = 7000;
+
+const CH_W = 320;
+const CH_H = 100;
+const CH_PAD = 5;
+const JG_W = 320;
+const JG_H = 44;
+const JG_PAD = 4;
+
+// azul (saas): montaña temprana · cyan (web): crecimiento que domina al final
+const S_SAAS = genSeries(3, 48, 0.16, 0.8, (t) => 0.18 + 0.62 * Math.exp(-((t - 0.32) ** 2) / 0.055));
+const S_WEB = genSeries(7, 48, 0.16, 0.8, (t) => 0.12 + 0.7 * Math.exp(-((t - 0.86) ** 2) / 0.16));
+// violeta (api): señal dentada de alta frecuencia
+const S_JAG = genSeries(11, 72, 0.55, 0.5, (t) => 0.48 + 0.16 * Math.sin(t * 5.2 + 0.8) + 0.1 * t);
+
+const SAAS_LINE = linePath(S_SAAS, CH_W, CH_H, CH_PAD);
+const SAAS_AREA = areaPath(S_SAAS, CH_W, CH_H, CH_PAD);
+const WEB_LINE = linePath(S_WEB, CH_W, CH_H, CH_PAD);
+const WEB_AREA = areaPath(S_WEB, CH_W, CH_H, CH_PAD);
+const JAG_LINE = linePath(S_JAG, JG_W, JG_H, JG_PAD);
+const JAG_AREA = areaPath(S_JAG, JG_W, JG_H, JG_PAD);
+const SAAS_END = endOf(S_SAAS, CH_W, CH_H, CH_PAD);
+const WEB_END = endOf(S_WEB, CH_W, CH_H, CH_PAD);
 
 interface StageLabels {
   building: string;
   deployed: string;
   production: string;
-  db: string;
-  api: string;
-  notif: string;
   live: string;
+  panel: string;
+  nav: string[];
+  stats: { label: string; value: string }[];
 }
 
 export default function HeroStage() {
-  const { lang, isMobile, reducedMotion } = useSite();
+  const { lang, reducedMotion } = useSite();
   const [hp, setHp] = useState(0);
   const [typed, setTyped] = useState(0);
   const [cmd, setCmd] = useState(0);
 
+  const code = useMemo(() => heroCode(lang), [lang]);
+  const codeLen = useMemo(
+    () => code.reduce((a, l) => a + l.reduce((b, tk) => b + tk[0].length, 0), 0),
+    [code],
+  );
+
   useEffect(() => {
     if (reducedMotion) {
       setHp(6);
-      setTyped(HERO_CODE_LEN);
+      setTyped(codeLen);
       setCmd(HERO_CMD.length);
       return;
     }
-    setHp(0);
-    setTyped(0);
-    setCmd(0);
     const timeouts: number[] = [];
     const intervals: number[] = [];
     const pushT = (fn: () => void, d: number) => {
@@ -52,11 +86,11 @@ export default function HeroStage() {
         setCmd(n);
         if (n >= HERO_CMD.length) {
           window.clearInterval(iv);
-          pushT(() => setHp(2), 1150);
-          pushT(() => setHp(3), 2350);
-          pushT(() => setHp(4), 3850);
-          pushT(() => setHp(5), 5700);
-          pushT(() => setHp(6), 6900);
+          pushT(() => setHp(2), 900);
+          pushT(() => setHp(3), 1900);
+          pushT(() => setHp(5), 3100);
+          pushT(() => setHp(6), 4100);
+          pushT(runCycle, 4100 + DWELL_MS);
         }
       }, 62);
       intervals.push(iv);
@@ -66,19 +100,25 @@ export default function HeroStage() {
       const iv = window.setInterval(() => {
         n += 1;
         setTyped(n);
-        if (n >= HERO_CODE_LEN) {
+        if (n >= codeLen) {
           window.clearInterval(iv);
           pushT(typeCmd, 400);
         }
-      }, 20);
+      }, 14);
       intervals.push(iv);
     };
-    pushT(typeCode, 550);
+    const runCycle = () => {
+      setHp(0);
+      setTyped(0);
+      setCmd(0);
+      pushT(typeCode, 450);
+    };
+    runCycle();
     return () => {
       timeouts.forEach((id) => window.clearTimeout(id));
       intervals.forEach((id) => window.clearInterval(id));
     };
-  }, [reducedMotion]);
+  }, [reducedMotion, codeLen]);
 
   const dot = (c: string) => (
     <span style={{ width: '10px', height: '10px', borderRadius: '50%', flexShrink: 0, background: c }} />
@@ -96,11 +136,11 @@ export default function HeroStage() {
   );
 
   const codeLayer = () => {
-    const typedCount = reducedMotion ? HERO_CODE_LEN : typed;
+    const typedCount = reducedMotion ? codeLen : typed;
     let rem = typedCount;
     const rows: { n: number; spans: ReactElement[] }[] = [];
-    for (let li = 0; li < HERO_CODE.length; li++) {
-      const toks = HERO_CODE[li];
+    for (let li = 0; li < code.length; li++) {
+      const toks = code[li];
       const spans: ReactElement[] = [];
       for (let ti = 0; ti < toks.length; ti++) {
         if (rem <= 0) break;
@@ -118,7 +158,7 @@ export default function HeroStage() {
     const out: ReactElement[] = [];
     for (let i = 0; i < rows.length; i++) {
       const kids = rows[i].spans.slice();
-      if (i === rows.length - 1 && hp <= 1 && typedCount < HERO_CODE_LEN) kids.push(cursorEl('cur'));
+      if (i === rows.length - 1 && hp <= 1 && typedCount < codeLen) kids.push(cursorEl('cur'));
       out.push(
         <div key={i} style={{ display: 'flex', gap: '13px', minHeight: '19px' }}>
           <span style={{ color: '#495166', width: '12px', textAlign: 'right', flexShrink: 0, userSelect: 'none' }}>{String(rows[i].n)}</span>
@@ -224,98 +264,254 @@ export default function HeroStage() {
     );
   };
 
-  const appLayer = () => {
+  const appLayer = (L: StageLabels) => {
     const on = hp >= 3;
     const card: CSSProperties = { border: '1px solid var(--border)', background: 'var(--surface)', borderRadius: '10px' };
     const header = (
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
         <span style={{ width: '20px', height: '20px', borderRadius: '6px', background: 'linear-gradient(135deg,var(--g1),var(--g2))', flexShrink: 0 }} />
-        <span style={{ width: '50px', height: '7px', borderRadius: '4px', background: 'var(--surface-2)' }} />
-        <span style={{ width: '32px', height: '7px', borderRadius: '4px', background: 'var(--surface-2)' }} />
-        <span style={{ marginLeft: 'auto', width: '20px', height: '20px', borderRadius: '50%', background: 'var(--surface-2)' }} />
+        <span style={{ fontSize: '.68rem', fontWeight: 700, letterSpacing: '-.01em', color: 'var(--text)', whiteSpace: 'nowrap' }}>
+          Meraki<span style={{ color: 'var(--accent)' }}>Code</span>
+        </span>
+        <span style={{ fontSize: '.6rem', color: 'var(--dim)', whiteSpace: 'nowrap', borderLeft: '1px solid var(--border)', paddingLeft: '8px' }}>
+          {L.panel}
+        </span>
+        <span style={{ marginLeft: 'auto', width: '20px', height: '20px', borderRadius: '50%', background: 'var(--surface-2)', flexShrink: 0 }} />
       </div>
     );
-    const stat = (w: string, grad: boolean) => (
-      <div style={{ ...card, padding: '9px 10px', flex: '1' }}>
-        <span style={{ display: 'block', width: w, height: '5px', borderRadius: '3px', background: 'var(--surface-2)', marginBottom: '8px' }} />
-        <span style={{ display: 'block', width: '64%', height: '11px', borderRadius: '4px', background: grad ? 'linear-gradient(90deg,var(--g1),var(--g2))' : 'var(--surface-2)' }} />
+    const stat = (s: { label: string; value: string }, grad: boolean) => (
+      <div key={s.label} style={{ ...card, padding: '8px 10px', flex: '1', minWidth: 0 }}>
+        <span
+          style={{
+            display: 'block',
+            fontSize: '.54rem',
+            letterSpacing: '.08em',
+            textTransform: 'uppercase',
+            color: 'var(--dim)',
+            marginBottom: '5px',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+          }}
+        >
+          {s.label}
+        </span>
+        <span
+          style={{
+            display: 'block',
+            fontFamily: "'JetBrains Mono',monospace",
+            fontSize: '.82rem',
+            fontWeight: 700,
+            lineHeight: 1.1,
+            whiteSpace: 'nowrap',
+            ...(grad
+              ? {
+                  background: 'linear-gradient(90deg,var(--g1),var(--g2))',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  color: 'transparent',
+                }
+              : { color: 'var(--text)' }),
+          }}
+        >
+          {s.value}
+        </span>
       </div>
     );
     const stats = (
       <div style={{ display: 'flex', gap: '8px', marginBottom: '11px' }}>
-        {stat('55%', true)}
-        {stat('48%', false)}
-        {stat('60%', false)}
+        {L.stats.map((s, i) => stat(s, i === 0))}
       </div>
     );
-    const chart = (
-      <svg viewBox="0 0 320 92" preserveAspectRatio="none" style={{ width: '100%', height: '66px', display: 'block', overflow: 'visible' }}>
-        <defs>
-          <linearGradient id="mcArea" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#22D3EE" stopOpacity="0.32" />
-            <stop offset="100%" stopColor="#22D3EE" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <path
-          d="M0 66 C40 58,58 30,98 40 S168 20,208 33 S280 12,320 26 L320 92 L0 92 Z"
-          fill="url(#mcArea)"
-          style={{ opacity: on ? 1 : 0, transition: 'opacity .8s ease .2s' }}
-        />
-        <path
-          d="M0 66 C40 58,58 30,98 40 S168 20,208 33 S280 12,320 26"
-          fill="none"
-          stroke="#22D3EE"
-          strokeWidth="2"
-          strokeLinecap="round"
-          style={{ strokeDasharray: 430, strokeDashoffset: on ? 0 : 430, transition: 'stroke-dashoffset 1s ease .1s', filter: 'drop-shadow(0 3px 8px rgba(34,211,238,.5))' }}
-        />
-        <circle
-          cx="320"
-          cy="26"
-          r="3.5"
-          fill="#22D3EE"
-          style={{ opacity: on ? 1 : 0, transition: 'opacity .3s ease .9s', animation: hp >= 6 ? 'mc-pulse 1.8s infinite' : 'none' }}
-        />
-      </svg>
+    const monoLabel: CSSProperties = {
+      fontFamily: "'JetBrains Mono',monospace",
+      fontSize: '.56rem',
+      color: 'var(--dim)',
+      letterSpacing: '.06em',
+      lineHeight: 1,
+    };
+    const seriesDot = (c: string) => (
+      <span style={{ width: '7px', height: '7px', borderRadius: '2px', background: c, flexShrink: 0 }} />
     );
-    const bh = [50, 74, 60, 88, 66, 92, 72];
-    const bars = bh.map((v, b) => (
-      <span
-        key={b}
+    const chartCard = (
+      <div
         style={{
+          ...card,
+          padding: '9px 11px 8px',
           flex: '1',
-          height: `${v}%`,
-          borderRadius: '4px 4px 0 0',
-          transformOrigin: 'bottom',
-          background: b % 2 ? 'linear-gradient(180deg,var(--g2),var(--g1))' : 'var(--surface-2)',
-          animation: hp >= 6 ? `mc-breathe ${2.4 + b * 0.2}s ease-in-out infinite ${b * 0.1}s` : 'none',
+          minHeight: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '7px',
         }}
-      />
-    ));
-    const barBox = (
-      <div style={{ ...card, padding: '10px 11px', marginTop: '11px' }}>
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: '6px', height: '42px' }}>{bars}</div>
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '11px' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+            {seriesDot('#22D3EE')}
+            <span style={monoLabel}>web</span>
+          </span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+            {seriesDot('#3b82f6')}
+            <span style={monoLabel}>saas</span>
+          </span>
+          <span style={{ ...monoLabel, marginLeft: 'auto', color: '#34d399' }}>▲ 32%</span>
+        </div>
+        <div style={{ flex: '1', minHeight: 0, display: 'flex', gap: '7px' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              textAlign: 'right',
+              padding: '1px 0 2px',
+            }}
+          >
+            <span style={monoLabel}>48k</span>
+            <span style={monoLabel}>24k</span>
+            <span style={monoLabel}>0</span>
+          </div>
+          <svg
+            viewBox={`0 0 ${CH_W} ${CH_H}`}
+            preserveAspectRatio="none"
+            style={{ flex: '1', minWidth: 0, height: '100%', display: 'block', overflow: 'visible' }}
+          >
+            <defs>
+              <linearGradient id="mcAreaWeb" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#22D3EE" stopOpacity="0.30" />
+                <stop offset="100%" stopColor="#22D3EE" stopOpacity="0.02" />
+              </linearGradient>
+              <linearGradient id="mcAreaSaas" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.32" />
+                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.02" />
+              </linearGradient>
+            </defs>
+            {[CH_PAD, CH_H / 2, CH_H - CH_PAD].map((y) => (
+              <line
+                key={y}
+                x1="0"
+                x2={CH_W}
+                y1={y}
+                y2={y}
+                stroke="var(--border)"
+                strokeWidth="1"
+                vectorEffect="non-scaling-stroke"
+              />
+            ))}
+            <path d={SAAS_AREA} fill="url(#mcAreaSaas)" style={{ opacity: on ? 1 : 0, transition: 'opacity .8s ease .35s' }} />
+            <path
+              d={SAAS_LINE}
+              fill="none"
+              stroke="#3b82f6"
+              strokeWidth="2"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+              style={{ strokeDasharray: 700, strokeDashoffset: on ? 0 : 700, transition: 'stroke-dashoffset 1.3s ease .05s', filter: 'drop-shadow(0 2px 6px rgba(59,130,246,.45))' }}
+            />
+            <path d={WEB_AREA} fill="url(#mcAreaWeb)" style={{ opacity: on ? 1 : 0, transition: 'opacity .8s ease .45s' }} />
+            <path
+              d={WEB_LINE}
+              fill="none"
+              stroke="#22D3EE"
+              strokeWidth="2"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+              style={{ strokeDasharray: 700, strokeDashoffset: on ? 0 : 700, transition: 'stroke-dashoffset 1.3s ease .15s', filter: 'drop-shadow(0 3px 8px rgba(34,211,238,.5))' }}
+            />
+            <circle
+              cx={SAAS_END.x}
+              cy={SAAS_END.y}
+              r="3"
+              fill="#3b82f6"
+              style={{ opacity: on ? 1 : 0, transition: 'opacity .3s ease 1.15s', animation: hp >= 6 ? 'mc-pulse 2.2s infinite .4s' : 'none' }}
+            />
+            <circle
+              cx={WEB_END.x}
+              cy={WEB_END.y}
+              r="3.5"
+              fill="#22D3EE"
+              style={{ opacity: on ? 1 : 0, transition: 'opacity .3s ease 1.25s', animation: hp >= 6 ? 'mc-pulse 1.8s infinite' : 'none' }}
+            />
+          </svg>
+        </div>
+      </div>
+    );
+    const jagCard = (
+      <div
+        className="mc-stage-jag"
+        style={{ ...card, padding: '8px 11px 7px', marginTop: '11px' }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          {seriesDot('#c084fc')}
+          <span style={monoLabel}>api</span>
+          <span style={{ ...monoLabel, marginLeft: 'auto' }}>99.9%</span>
+        </div>
+        <svg
+          viewBox={`0 0 ${JG_W} ${JG_H}`}
+          preserveAspectRatio="none"
+          style={{ width: '100%', height: '34px', display: 'block' }}
+        >
+          <defs>
+            <linearGradient id="mcJagFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#c084fc" stopOpacity="0.34" />
+              <stop offset="100%" stopColor="#818cf8" stopOpacity="0.02" />
+            </linearGradient>
+            <linearGradient id="mcJagStroke" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#e879f9" />
+              <stop offset="100%" stopColor="#818cf8" />
+            </linearGradient>
+          </defs>
+          <path d={JAG_AREA} fill="url(#mcJagFill)" style={{ opacity: on ? 1 : 0, transition: 'opacity .8s ease .55s' }} />
+          <path
+            d={JAG_LINE}
+            fill="none"
+            stroke="url(#mcJagStroke)"
+            strokeWidth="1.6"
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+            style={{ strokeDasharray: 1400, strokeDashoffset: on ? 0 : 1400, transition: 'stroke-dashoffset 1.6s ease .3s' }}
+          />
+        </svg>
       </div>
     );
     const main = (
-      <div style={{ flex: '1', minWidth: '0', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ flex: '1', minWidth: '0', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
         {stats}
-        <div style={{ ...card, padding: '10px 11px' }}>{chart}</div>
-        {barBox}
+        {chartCard}
+        {jagCard}
       </div>
     );
-    const navRow = (active: boolean) => (
-      <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
-        <span style={{ width: '8px', height: '8px', borderRadius: '3px', background: active ? 'var(--accent)' : 'var(--surface-2)' }} />
-        <span style={{ flex: '1', height: '7px', borderRadius: '4px', background: active ? 'linear-gradient(90deg,var(--g1),var(--g2))' : 'var(--surface-2)' }} />
+    const navRow = (label: string, active: boolean) => (
+      <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <span
+          style={{
+            width: '7px',
+            height: '7px',
+            borderRadius: '2px',
+            flexShrink: 0,
+            background: active ? 'var(--accent)' : 'var(--surface-2)',
+          }}
+        />
+        <span
+          style={{
+            flex: '1',
+            minWidth: 0,
+            fontSize: '.56rem',
+            lineHeight: 1,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            color: active ? 'var(--text)' : 'var(--dim)',
+            fontWeight: active ? 600 : 400,
+          }}
+        >
+          {label}
+        </span>
       </div>
     );
     const side = (
-      <div style={{ width: '58px', display: 'flex', flexDirection: 'column', gap: '9px' }}>
-        {navRow(true)}
-        {navRow(false)}
-        {navRow(false)}
-        {navRow(false)}
+      <div style={{ width: '64px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        {L.nav.map((n, i) => navRow(n, i === 0))}
       </div>
     );
     const op = on ? '1' : '0';
@@ -329,6 +525,8 @@ export default function HeroStage() {
           padding: '15px',
           overflow: 'hidden',
           pointerEvents: 'none',
+          display: 'flex',
+          flexDirection: 'column',
           opacity: op,
           filter: `blur(${bl})`,
           transform: `scale(${sc})`,
@@ -373,7 +571,7 @@ export default function HeroStage() {
       <div style={{ position: 'relative', flex: '1', minHeight: '0' }}>
         {codeLayer()}
         {hp >= 1 ? wireLayer() : null}
-        {hp >= 2 ? appLayer() : null}
+        {hp >= 2 ? appLayer(L) : null}
       </div>
     );
     const inner = (
@@ -397,148 +595,9 @@ export default function HeroStage() {
       </div>
     );
     return (
-      <div
-        key="win"
-        style={{
-          position: 'absolute',
-          left: '50%',
-          top: '50%',
-          transform: 'translate(-50%,-50%)',
-          width: isMobile ? '100%' : '52%',
-          minWidth: isMobile ? '0' : '384px',
-          height: isMobile ? '100%' : '74%',
-          zIndex: 3,
-        }}
-      >
+      <div key="win" style={{ position: 'absolute', inset: '44px 0 0', zIndex: 3 }}>
         {inner}
       </div>
-    );
-  };
-
-  const sat = (pos: CSSProperties, i: number, key: string, inner: ReactNode) => {
-    const on = hp >= 4;
-    return (
-      <div
-        key={key}
-        style={{
-          position: 'absolute',
-          zIndex: 4,
-          ...pos,
-          opacity: on ? '1' : '0',
-          transform: on ? 'translateY(0) scale(1)' : 'translateY(16px) scale(.92)',
-          transition: `opacity .6s cubic-bezier(.22,.61,.36,1) ${i * 0.12}s,transform .6s cubic-bezier(.22,.61,.36,1) ${i * 0.12}s`,
-        }}
-      >
-        <div style={{ animation: `mc-rise ${7 + i}s ease-in-out infinite ${i * 0.3}s` }}>{inner}</div>
-      </div>
-    );
-  };
-
-  const satellites = (L: StageLabels) => {
-    const glass: CSSProperties = {
-      border: '1px solid var(--border-strong)',
-      background: 'var(--nav-bg)',
-      backdropFilter: 'blur(12px)',
-      WebkitBackdropFilter: 'blur(12px)',
-      borderRadius: '12px',
-      boxShadow: 'var(--shadow)',
-    };
-    const check = (
-      <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'rgba(52,211,153,.18)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#34d399" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M20 6L9 17l-5-5" />
-        </svg>
-      </span>
-    );
-    const notif = sat(
-      { top: '2%', left: '-1%' },
-      0,
-      'notif',
-      <div style={{ ...glass, display: 'flex', alignItems: 'center', gap: '10px', padding: '11px 13px', width: '180px' }}>
-        {check}
-        <div style={{ flex: '1' }}>
-          <div style={{ fontSize: '.74rem', fontWeight: 600, color: 'var(--text)', marginBottom: '5px' }}>{L.notif}</div>
-          <div style={{ height: '5px', width: '70%', borderRadius: '3px', background: 'var(--surface-2)' }} />
-        </div>
-      </div>,
-    );
-    const api = sat(
-      { top: '1%', right: '11%' },
-      1,
-      'api',
-      <div style={{ ...glass, display: 'flex', alignItems: 'center', gap: '9px', padding: '9px 14px' }}>
-        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.74rem', fontWeight: 600, color: 'var(--accent)' }}>{L.api}</span>
-        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#34d399', boxShadow: '0 0 0 3px rgba(52,211,153,.18)', animation: 'mc-pulse 1.8s infinite' }} />
-      </div>,
-    );
-    const cyl = (
-      <span style={{ width: '26px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '2px' }}>
-        <span style={{ height: '7px', borderRadius: '50%', background: 'linear-gradient(90deg,var(--g1),var(--g2))' }} />
-        <span style={{ height: '7px', borderRadius: '50%', background: 'var(--surface-2)' }} />
-        <span style={{ height: '7px', borderRadius: '50%', background: 'var(--surface-2)' }} />
-      </span>
-    );
-    const db = sat(
-      { bottom: '5%', left: '1%' },
-      2,
-      'db',
-      <div style={{ ...glass, display: 'flex', alignItems: 'center', gap: '10px', padding: '11px 13px', width: '158px' }}>
-        {cyl}
-        <div style={{ flex: '1' }}>
-          <div style={{ fontSize: '.74rem', fontWeight: 600, color: 'var(--text)', marginBottom: '5px' }}>{L.db}</div>
-          <div style={{ height: '5px', width: '80%', borderRadius: '3px', background: 'var(--surface-2)' }} />
-        </div>
-      </div>,
-    );
-    const phone = (
-      <div style={{ width: '112px', height: '186px', borderRadius: '20px', border: '1px solid var(--border-strong)', background: 'var(--card)', boxShadow: 'var(--shadow)', padding: '9px', position: 'relative', overflow: 'hidden' }}>
-        <span style={{ position: 'absolute', top: '7px', left: '50%', transform: 'translateX(-50%)', width: '34px', height: '4px', borderRadius: '3px', background: 'var(--surface-2)' }} />
-        <div style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <span style={{ height: '9px', width: '60%', borderRadius: '4px', background: 'linear-gradient(90deg,var(--g1),var(--g2))' }} />
-          <div style={{ border: '1px solid var(--border)', borderRadius: '9px', padding: '8px', display: 'flex', alignItems: 'flex-end', gap: '4px', height: '52px' }}>
-            <span style={{ flex: '1', height: '40%', background: 'var(--surface-2)', borderRadius: '3px 3px 0 0', transformOrigin: 'bottom', animation: 'mc-breathe 2.6s ease-in-out infinite' }} />
-            <span style={{ flex: '1', height: '70%', background: 'linear-gradient(180deg,var(--g2),var(--g1))', borderRadius: '3px 3px 0 0', transformOrigin: 'bottom', animation: 'mc-breathe 2.6s ease-in-out infinite .2s' }} />
-            <span style={{ flex: '1', height: '55%', background: 'var(--surface-2)', borderRadius: '3px 3px 0 0', transformOrigin: 'bottom', animation: 'mc-breathe 2.6s ease-in-out infinite .4s' }} />
-            <span style={{ flex: '1', height: '85%', background: 'linear-gradient(180deg,var(--g2),var(--g1))', borderRadius: '3px 3px 0 0', transformOrigin: 'bottom', animation: 'mc-breathe 2.6s ease-in-out infinite .6s' }} />
-          </div>
-          <span style={{ height: '7px', width: '90%', borderRadius: '4px', background: 'var(--surface-2)' }} />
-          <span style={{ height: '7px', width: '70%', borderRadius: '4px', background: 'var(--surface-2)' }} />
-        </div>
-      </div>
-    );
-    const mobile = sat({ top: '50%', right: '-2%', marginTop: '-93px' }, 3, 'mob', phone);
-    return [notif, api, db, mobile];
-  };
-
-  const lines = () => {
-    const on = hp >= 4;
-    const conn = (d: string, i: number) => (
-      <g key={i} style={{ opacity: on ? 1 : 0, transition: `opacity .6s ease ${i * 0.1}s` }}>
-        <path d={d} fill="none" stroke="var(--border-strong)" strokeWidth="1.2" />
-        <path
-          d={d}
-          fill="none"
-          stroke="#22D3EE"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeDasharray="3 13"
-          style={{ animation: on ? 'mc-flow 1.3s linear infinite' : 'none', filter: 'drop-shadow(0 0 4px rgba(34,211,238,.7))' }}
-        />
-      </g>
-    );
-    return (
-      <svg
-        key="lines"
-        viewBox="0 0 960 520"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-        style={{ position: 'absolute', inset: '0', width: '100%', height: '100%', zIndex: 2, pointerEvents: 'none', overflow: 'visible' }}
-      >
-        {conn('M470 250 Q320 200 175 120', 0)}
-        {conn('M492 232 Q640 150 762 96', 1)}
-        {conn('M452 300 Q300 380 172 428', 2)}
-        {conn('M520 260 Q720 260 872 262', 3)}
-      </svg>
     );
   };
 
@@ -554,7 +613,7 @@ export default function HeroStage() {
         key="dep"
         style={{
           position: 'absolute',
-          top: isMobile ? '6px' : '10px',
+          top: 0,
           left: '50%',
           zIndex: 6,
           transform: `translateX(-50%) ${on ? 'translateY(0) scale(1)' : 'translateY(-10px) scale(.9)'}`,
@@ -591,23 +650,36 @@ export default function HeroStage() {
 
   const es = lang === 'es';
   const L: StageLabels = es
-    ? { building: 'Compilando módulos…', deployed: 'Deploy exitoso', production: 'En producción', db: 'Base de datos', api: 'API', notif: 'Listo para producción', live: 'En vivo' }
-    : { building: 'Building modules…', deployed: 'Successful deploy', production: 'In production', db: 'Database', api: 'API', notif: 'Ready for production', live: 'Live' };
+    ? {
+        building: 'Compilando módulos…',
+        deployed: 'Deploy exitoso',
+        production: 'En producción',
+        live: 'En vivo',
+        panel: 'Panel',
+        nav: ['Inicio', 'Proyectos', 'Equipo', 'Ajustes'],
+        stats: [
+          { label: 'Respuesta', value: '< 24 h' },
+          { label: 'Entrega', value: '4–8 sem' },
+          { label: 'Soporte', value: '24/7' },
+        ],
+      }
+    : {
+        building: 'Building modules…',
+        deployed: 'Successful deploy',
+        production: 'In production',
+        live: 'Live',
+        panel: 'Dashboard',
+        nav: ['Home', 'Projects', 'Team', 'Settings'],
+        stats: [
+          { label: 'Response', value: '< 24 h' },
+          { label: 'Delivery', value: '4–8 wks' },
+          { label: 'Support', value: '24/7' },
+        ],
+      };
 
   return (
-    <div
-      className="mc-stage"
-      style={{
-        position: 'relative',
-        width: '100%',
-        maxWidth: isMobile ? '430px' : '960px',
-        margin: '0 auto',
-        height: isMobile ? '410px' : 'clamp(440px,44vw,560px)',
-      }}
-    >
-      {!isMobile && hp >= 3 && lines()}
+    <div className="mc-stage" style={{ position: 'relative', width: '100%', height: '100%' }}>
       {heroWindow(L)}
-      {!isMobile && hp >= 3 && satellites(L)}
       {deployBadge(L)}
     </div>
   );

@@ -58,7 +58,7 @@ function matches(query: string): boolean {
   }
 }
 
-function useMediaFlag(query: string): boolean {
+export function useMediaFlag(query: string): boolean {
   const [flag, setFlag] = useState(() => matches(query));
   useEffect(() => {
     const mq = window.matchMedia(query);
