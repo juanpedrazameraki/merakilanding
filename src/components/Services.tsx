@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { useSite } from '../context/SiteContext';
 import { gsap, useGSAP, SplitText } from '../lib/gsap';
+import { linePath, areaPath } from '../utils/chartPaths';
 import BlueprintWeb from './services/BlueprintWeb';
 import BlueprintSaas from './services/BlueprintSaas';
 import BlueprintCustom from './services/BlueprintCustom';
@@ -12,6 +13,48 @@ import './Services.css';
    sólido (== estado reduced-motion); el branch animado oculta todo con
    gsap.set en fase layout-effect (pre-paint) y anima con .to(). GSAP jamás
    toca .mc-svc-card: su hover translateY vive en CSS. */
+
+/* ─────────────────────────────────────────────────────────────────────────
+   IDLE — "vida" ambiental de las tarjetas. Arranca cuando la tarjeta termina
+   de solidificar y corre en bucle infinito. Todos los tiempos en SEGUNDOS.
+   Ajusta estos números a mano para calibrar el ritmo (no hace falta el
+   previsualizador): la dirección de cada efecto va comentada al lado.
+   ───────────────────────────────────────────────────────────────────────── */
+const IDLE = {
+  // ── Pulso de datos que viaja por los cables (tarjeta "Software a medida")
+  //    y por la línea del chart (tarjeta "SaaS") ──
+  FLOW_DUR: 1.1, //         cuánto tarda un pulso en recorrer un cable   (↑ = más lento)
+  FLOW_GAP: 0.45, //        separación entre el disparo de un cable y el siguiente (↑ = más espaciado)
+  FLOW_WINDOW: 16, //       largo del pulso, en % del cable              (↑ = "paquete" más largo)
+  FLOW_CYCLE_PAUSE: 1.6, // pausa tras recorrer TODOS los cables antes de repetir (↑ = más calma)
+
+  // ── Onda de "dato en vivo" en el último punto del chart (tarjeta "SaaS") ──
+  PING_DUR: 1.8, //         cuánto dura la onda expandiéndose            (↑ = más lento)
+  PING_SCALE: 3.4, //       cuánto crece el anillo respecto al punto     (↑ = onda más grande)
+  PING_GAP: 1.0, //         pausa entre una onda y la siguiente          (↑ = pings más raros)
+
+  // ── Cursor que parpadea en la landing (tarjeta "Sitios web") ──
+  BLINK_ON: 0.55, //        tiempo visible del cursor
+  BLINK_OFF: 0.45, //       tiempo oculto del cursor  (ON≈OFF = parpadeo tipo terminal)
+
+  // ── Respiración suave (punto "en vivo" del browser / núcleo del nodo central) ──
+  BREATHE_DUR: 2.0, //      medio ciclo de respiración                   (↑ = más lento/calmado)
+  BREATHE_MIN: 0.4, //      opacidad mínima por defecto (cada elemento puede sobreescribir
+  BREATHE_MAX: 1, //        opacidad máxima por defecto  con data-breathe-min/max en el SVG)
+
+  // ── Tarjeta "Sitios web": carrusel del hero + un cursor que hace click en el CTA ──
+  WEB_HOME_DWELL: 1.3, //    pausa antes de que el cursor vaya al botón  (↑ = se ve más el carrusel)
+  WEB_MOVE: 0.85, //         cuánto tarda el cursor en desplazarse       (↑ = mouse más lento)
+  WEB_LOOP_PAUSE: 1.1, //    respiro tras el click antes de repetir
+  WEB_CARO_HOLD: 1.3, //     cuánto se ve cada slide del carrusel        (↑ = cambia más lento)
+  WEB_CARO_SLIDE: 0.6, //    duración del deslizamiento entre slides
+
+  // ── Tarjeta "SaaS": dos líneas en vivo (azul + morada) + números tipo contador ──
+  SAAS_TICK: 1.4, //         seg por cada "paso" que avanzan las líneas  (↑ = avanzan más lento)
+  SAAS_VOL: 0.32, //         qué tan brusco es cada dato nuevo, 0–1      (↑ = más errático)
+  SAAS_COUNT_DUR: 1.2, //    seg que tarda un contador en llegar al nuevo número
+  SAAS_COUNT_HOLD: 0.5, //   pausa del contador antes de saltar a otro número
+};
 
 const cardTitleStyle: React.CSSProperties = {
   fontSize: '1.22rem',
@@ -59,8 +102,11 @@ export default function Services() {
 
           if (reduce) {
             // El DOM autorado ya es el estado final sólido: solo apagar el plano
+            // y los elementos que solo cobran sentido animados (flujo/ping/cursor).
             gsap.set('[data-bp-lines]', { opacity: 0 });
             gsap.set('[data-bp-grid]', { opacity: 0.15 });
+            gsap.set('[data-bp-flow], [data-bp-ping], [data-bp-blink]', { opacity: 0 });
+            gsap.set('[data-bp-mouse], [data-bp-ripple]', { opacity: 0 });
             return;
           }
 
@@ -81,6 +127,11 @@ export default function Services() {
             const chips = q('[data-svc-chip]');
             const cta = q('[data-svc-cta]');
             const titleEl = q('[data-svc-title]')[0];
+            // Elementos del bucle de vida (cada tarjeta declara los suyos vía data-attrs)
+            const flows = q('[data-bp-flow]'); // pulsos que viajan por un trazo
+            const pings = q('[data-bp-ping]'); // anillos que se expanden
+            const blinks = q('[data-bp-blink]'); // cursores que parpadean
+            const breathes = q('[data-bp-breathe]'); // elementos que "respiran"
 
             const split = SplitText.create(titleEl, { type: 'words,chars', aria: 'auto' });
 
@@ -92,6 +143,16 @@ export default function Services() {
             gsap.set(split.chars, { autoAlpha: 0, scale: 1.3, transformOrigin: '50% 80%' });
             gsap.set(chips, { autoAlpha: 0, scale: 0.8, y: 6 });
             gsap.set(cta, { autoAlpha: 0, y: 8 });
+            // Estado de reposo del bucle de vida: pulsos fuera de cuadro (el dash
+            // empieza antes del inicio del trazo → invisible), ondas/cursores ocultos.
+            // (guardado por .length: cada tarjeta solo tiene algunos de estos)
+            if (flows.length) gsap.set(flows, { strokeDasharray: `${IDLE.FLOW_WINDOW} 200`, strokeDashoffset: IDLE.FLOW_WINDOW });
+            if (pings.length) gsap.set(pings, { autoAlpha: 0 });
+            if (blinks.length) gsap.set(blinks, { autoAlpha: 0 });
+
+            // Animaciones en bucle: se crean pausadas y arrancan al completar la
+            // revelación (onComplete). Se guardan aquí para dispararlas juntas.
+            const idles: gsap.core.Animation[] = [];
 
             let played = false;
             const tl = gsap.timeline({
@@ -104,6 +165,7 @@ export default function Services() {
               },
               onComplete: () => {
                 played = true;
+                idles.forEach((t) => t.play(0));
               },
             });
 
@@ -120,6 +182,207 @@ export default function Services() {
               .to(split.chars, { autoAlpha: 1, scale: 1, duration: 0.3, stagger: 0.015, ease: 'back.out(2)' }, 1.1)
               .to(chips, { autoAlpha: 1, scale: 1, y: 0, duration: 0.3, stagger: 0.06, ease: 'back.out(2.5)' }, 1.25)
               .to(cta, { autoAlpha: 1, y: 0, duration: 0.35 }, 1.4);
+
+            // ── Bucle de vida ──────────────────────────────────────────────
+            // Flujo: un dash corto (FLOW_WINDOW) recorre cada trazo del centro
+            // hacia afuera. offset va de +window (dash antes del inicio, oculto)
+            // a -100 (dash pasado el final, oculto) → el pulso entra, cruza y sale.
+            if (flows.length) {
+              const flowTl = gsap.timeline({ paused: true, repeat: -1, repeatDelay: IDLE.FLOW_CYCLE_PAUSE });
+              flows.forEach((f, k) => {
+                flowTl.fromTo(
+                  f,
+                  { strokeDashoffset: IDLE.FLOW_WINDOW },
+                  { strokeDashoffset: -100, duration: IDLE.FLOW_DUR, ease: 'sine.inOut' },
+                  k * IDLE.FLOW_GAP,
+                );
+              });
+              idles.push(flowTl);
+            }
+            // Respiración: opacidad que sube y baja en yoyo. Cada elemento puede
+            // fijar su propio rango con data-breathe-min / data-breathe-max.
+            breathes.forEach((el) => {
+              const min = parseFloat(el.getAttribute('data-breathe-min') ?? String(IDLE.BREATHE_MIN));
+              const max = parseFloat(el.getAttribute('data-breathe-max') ?? String(IDLE.BREATHE_MAX));
+              idles.push(
+                gsap.fromTo(
+                  el,
+                  { opacity: max },
+                  { opacity: min, duration: IDLE.BREATHE_DUR, ease: 'sine.inOut', repeat: -1, yoyo: true, paused: true, immediateRender: false },
+                ),
+              );
+            });
+            // Ping: anillo que crece desde el punto y se desvanece, en bucle.
+            pings.forEach((p) => {
+              idles.push(
+                gsap.fromTo(
+                  p,
+                  { scale: 1, autoAlpha: 0.65, transformOrigin: '50% 50%' },
+                  { scale: IDLE.PING_SCALE, autoAlpha: 0, duration: IDLE.PING_DUR, ease: 'power2.out', repeat: -1, repeatDelay: IDLE.PING_GAP, paused: true, immediateRender: false },
+                ),
+              );
+            });
+            // Parpadeo del cursor: visible BLINK_ON, oculto BLINK_OFF, en bucle.
+            blinks.forEach((b) => {
+              const blinkTl = gsap.timeline({ paused: true, repeat: -1 });
+              blinkTl
+                .set(b, { autoAlpha: 1 })
+                .to({}, { duration: IDLE.BLINK_ON })
+                .set(b, { autoAlpha: 0 })
+                .to({}, { duration: IDLE.BLINK_OFF });
+              idles.push(blinkTl);
+            });
+
+            // ── Tarjeta "Sitios web" (solo si tiene cursor): carrusel + click al CTA ──
+            const mouse = q('[data-bp-mouse]');
+            if (mouse.length) {
+              const caro = q('[data-bp-caro]');
+              const dots = q('[data-bp-dot]');
+              const cta = q('[data-bp-cta]')[0];
+              const ripple = q('[data-bp-ripple]');
+
+              // Estado inicial (pre-paint): overlays ocultos, carrusel en el slide 0.
+              gsap.set(caro, { x: 0 });
+              gsap.set([...mouse, ...ripple], { autoAlpha: 0 });
+              gsap.set(mouse, { transformOrigin: '0% 0%', x: 210, y: 150 });
+              gsap.set(ripple, { transformOrigin: '50% 50%', scale: 0 });
+              gsap.set(cta, { transformOrigin: '50% 50%' });
+
+              // Carrusel (bucle propio, independiente del cursor)
+              const SW = 104; // ancho de un slide (== IMG.w en BlueprintWeb)
+              const caroTl = gsap.timeline({ paused: true, repeat: -1 });
+              caroTl.to({}, { duration: IDLE.WEB_CARO_HOLD });
+              for (let k = 1; k <= 3; k++) {
+                caroTl.to(caro, { x: -k * SW, duration: IDLE.WEB_CARO_SLIDE, ease: 'power3.inOut' });
+                caroTl.to(dots[k % 3], { opacity: 1, duration: 0.2 }, '<');
+                caroTl.to(dots[(k - 1) % 3], { opacity: 0.35, duration: 0.2 }, '<');
+                if (k < 3) caroTl.to({}, { duration: IDLE.WEB_CARO_HOLD });
+              }
+              caroTl.set(caro, { x: 0 }); // slide #3 == slide #0 → reset invisible
+              idles.push(caroTl);
+
+              // Sub-timeline de "click": presiona el cursor + ripple + presiona el botón
+              const clickFx = (px: number, py: number, target: Element) => {
+                const t = gsap.timeline();
+                t.set(ripple, { x: px, y: py, scale: 0.3, autoAlpha: 1 }, 0)
+                  .to(mouse, { scale: 0.8, duration: 0.09, ease: 'power2.in' }, 0)
+                  .to(mouse, { scale: 1, duration: 0.16, ease: 'power2.out' }, 0.09)
+                  .to(ripple, { scale: 1.8, autoAlpha: 0, duration: 0.5, ease: 'power2.out' }, 0.02)
+                  .to(target, { scale: 0.94, duration: 0.09, ease: 'power2.in' }, 0)
+                  .to(target, { scale: 1, duration: 0.18, ease: 'power2.out' }, 0.09);
+                return t;
+              };
+
+              // Bucle: el cursor aparece, va al botón (70,150 = centro del CTA), hace click.
+              const journey = gsap.timeline({ paused: true, repeat: -1, defaults: { ease: 'power2.inOut' } });
+              journey
+                .set([...mouse, ...ripple], { autoAlpha: 0 })
+                .set(mouse, { x: 210, y: 150, scale: 1 })
+                .to(mouse, { autoAlpha: 1, duration: 0.3 })
+                .to({}, { duration: IDLE.WEB_HOME_DWELL })
+                .to(mouse, { x: 70, y: 150, duration: IDLE.WEB_MOVE })
+                .add(clickFx(70, 150, cta))
+                .to({}, { duration: IDLE.WEB_LOOP_PAUSE })
+                .to(mouse, { autoAlpha: 0, duration: 0.3 });
+              idles.push(journey);
+            }
+
+            // ── Tarjeta "SaaS": dos líneas en vivo + números tipo contador ──
+            const lineWrap = q('[data-bp-linewrap]');
+            if (lineWrap.length) {
+              // Geometría idéntica a BlueprintSaas (CHART.w/h/pad, SEG, L).
+              const W = 204;
+              const H = 52;
+              const PAD = 4;
+              const SEG = 8;
+              const L = SEG + 2; // 10 puntos: 8 visibles + 1 fuera-izq + 1 buffer-der
+              const SP = W / SEG; // 25.5 (un paso)
+              const VW = SP * (L - 1); // 229.5 (ancho virtual del path)
+              const lineA = q('[data-bp-line][data-line="a"]')[0];
+              const lineB = q('[data-bp-line][data-line="b"]')[0];
+              const areaA = q('[data-bp-area][data-line="a"]')[0];
+              const areaB = q('[data-bp-area][data-line="b"]')[0];
+
+              // Dos series "en vivo": random walk acotado → nunca son iguales.
+              const clamp = (v: number) => Math.min(0.9, Math.max(0.1, v));
+              const seed = (base: number) => Array.from({ length: L }, () => clamp(base + (Math.random() - 0.5) * 0.3));
+              const sA = seed(0.45);
+              const sB = seed(0.62);
+              const redraw = () => {
+                lineA.setAttribute('d', linePath(sA, VW, H, PAD));
+                lineB.setAttribute('d', linePath(sB, VW, H, PAD));
+                areaA.setAttribute('d', areaPath(sA, VW, H, PAD));
+                areaB.setAttribute('d', areaPath(sB, VW, H, PAD));
+              };
+              const advance = (s: number[]) => {
+                s.shift(); // suelta el punto más viejo (izquierda)
+                s.push(clamp(s[s.length - 1] + (Math.random() - 0.5) * IDLE.SAAS_VOL)); // nuevo dato (derecha)
+              };
+
+              // redraw()/contadores mutan el DOM con setAttribute/textContent —
+              // GSAP no lo registra, así que su revert no lo repondría. Guardamos
+              // el estado autorado y lo restauramos si el contexto se revierte
+              // (p.ej. al activar reduced-motion a mitad de sesión).
+              const liveEls = [lineA, lineB, areaA, areaB];
+              const authoredD = liveEls.map((el) => el.getAttribute('d'));
+              const counterEls = q('[data-bp-counter]');
+              const authoredText = counterEls.map((el) => el.textContent);
+              cleanups.push(() => {
+                liveEls.forEach((el, n) => el.setAttribute('d', authoredD[n] ?? ''));
+                counterEls.forEach((el, n) => {
+                  el.textContent = authoredText[n];
+                });
+              });
+
+              redraw(); // estado inicial en vivo (pre-paint)
+
+              // Scroll continuo: cada iteración se traslada un paso y, al repetir,
+              // avanza los datos y redibuja (el reset de x deja el corte invisible).
+              idles.push(
+                gsap.fromTo(
+                  lineWrap,
+                  { x: 0 },
+                  {
+                    x: -SP,
+                    duration: IDLE.SAAS_TICK,
+                    ease: 'none',
+                    repeat: -1,
+                    onRepeat: () => {
+                      advance(sA);
+                      advance(sB);
+                      redraw();
+                    },
+                    paused: true,
+                  },
+                ),
+              );
+
+              // Números de las KPI con efecto de contador (suben/bajan a valores random).
+              counterEls.forEach((el) => {
+                const min = parseFloat(el.getAttribute('data-count-min') ?? '0');
+                const max = parseFloat(el.getAttribute('data-count-max') ?? '100');
+                const suffix = el.getAttribute('data-count-suffix') ?? '';
+                const prefix = el.getAttribute('data-count-prefix') ?? '';
+                const sep = el.getAttribute('data-count-sep') === '1';
+                const obj = { v: (min + max) / 2 };
+                const render = () => {
+                  const r = Math.round(obj.v);
+                  el.textContent = `${prefix}${sep ? r.toLocaleString('en-US') : r}${suffix}`;
+                };
+                idles.push(
+                  gsap.to(obj, {
+                    v: () => min + Math.random() * (max - min),
+                    duration: IDLE.SAAS_COUNT_DUR,
+                    ease: 'power1.inOut',
+                    repeat: -1,
+                    repeatRefresh: true,
+                    repeatDelay: IDLE.SAAS_COUNT_HOLD,
+                    onUpdate: render,
+                    paused: true,
+                  }),
+                );
+              });
+            }
 
             if (canHover && contextSafe) {
               const scan = q('[data-bp-scan]');

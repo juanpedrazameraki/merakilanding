@@ -1,16 +1,33 @@
 /* Plano "SaaS": dashboard que se dibuja (sidebar, stat cards, ejes) y remata
-   con la línea de chart trazándose sola (data-bp-chart, tween propio), luego
-   se solidifica con área en gradiente y dot final. */
-import { genSeries, linePath, areaPath, endOf } from '../../utils/chartPaths';
+   con las líneas del chart. Tras solidificar corre en vivo (lo maneja
+   Services.tsx): dos líneas (azul + morada) que avanzan con datos aleatorios
+   —nunca iguales— desplazándose hacia la izquierda, y los números de las
+   tarjetas superiores suben/bajan con efecto de contador. */
+import { genSeries, linePath, areaPath } from '../../utils/chartPaths';
 
 const F = { x: 16, y: 18, w: 288, h: 164, r: 8 };
 const SIDE_X = 78;
 const CHART = { x: 92, y: 110, w: 204, h: 52, pad: 4 };
 
-const S = genSeries(5, 36, 0.14, 0.8, (t) => 0.2 + 0.55 * t + 0.15 * Math.sin(t * 4));
-const LINE = linePath(S, CHART.w, CHART.h, CHART.pad);
-const AREA = areaPath(S, CHART.w, CHART.h, CHART.pad);
-const END = endOf(S, CHART.w, CHART.h, CHART.pad);
+// Geometría del "chart en vivo": 8 segmentos visibles + 1 punto fuera a la
+// izquierda + 1 buffer a la derecha = 10 puntos. El path se dibuja sobre un
+// ancho virtual VW (más ancho que la ventana) y se recorta con bps-chartclip;
+// Services.tsx traslada el grupo un paso (SP) y va rotando los datos.
+const SEG = 8;
+const L = SEG + 2; // 10 puntos
+const SP = CHART.w / SEG; // 25.5 (separación entre puntos)
+const VW = SP * (L - 1); // 229.5 (ancho virtual del path)
+
+// Series iniciales (deterministas para el primer render / reduced-motion).
+const SA = genSeries(9, L, 0.45, 0.55, (t) => 0.45 + 0.18 * Math.sin(t * 3.2));
+const SB = genSeries(23, L, 0.45, 0.55, (t) => 0.58 - 0.16 * Math.sin(t * 2.3 + 1));
+const LINE_A = linePath(SA, VW, CHART.h, CHART.pad);
+const AREA_A = areaPath(SA, VW, CHART.h, CHART.pad);
+const LINE_B = linePath(SB, VW, CHART.h, CHART.pad);
+const AREA_B = areaPath(SB, VW, CHART.h, CHART.pad);
+// El wireframe (draw-in) NO va recortado, así que se traza sobre el ancho
+// VISIBLE (no el virtual) para no asomarse fuera del frame del dashboard.
+const LINE_A_VIS = linePath(SA, CHART.w, CHART.h, CHART.pad);
 
 const MONO = "'JetBrains Mono',monospace";
 
@@ -28,15 +45,23 @@ export default function BlueprintSaas() {
           <stop offset="0%" stopColor="var(--g1)" />
           <stop offset="100%" stopColor="var(--g2)" />
         </linearGradient>
-        <linearGradient id="bps-area" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="var(--g2)" stopOpacity="0.25" />
-          <stop offset="100%" stopColor="var(--g2)" stopOpacity="0" />
+        <linearGradient id="bps-area-a" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.22" />
+          <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient id="bps-area-b" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="var(--viz-purple)" stopOpacity="0.2" />
+          <stop offset="100%" stopColor="var(--viz-purple)" stopOpacity="0" />
         </linearGradient>
         <linearGradient id="bps-scan" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="var(--accent)" stopOpacity="0" />
           <stop offset="50%" stopColor="var(--accent)" stopOpacity="0.16" />
           <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
         </linearGradient>
+        {/* Ventana del chart: recorta el buffer y lo que ya se desplazó */}
+        <clipPath id="bps-chartclip">
+          <rect x="0" y="-6" width={CHART.w} height="64" />
+        </clipPath>
       </defs>
 
       <g data-bp-grid>
@@ -52,17 +77,41 @@ export default function BlueprintSaas() {
         />
         <rect x="28" y="30" width="38" height="10" rx="5" fill="url(#bps-g)" />
         <path d="M28 56 h38 M28 72 h38 M28 88 h38 M28 104 h38" stroke="var(--dim)" strokeWidth="3" strokeLinecap="round" />
+
+        {/* Tarjetas KPI — los números se animan con contador en Services.tsx */}
         <rect x="92" y="30" width="62" height="34" rx="5" fill="var(--surface)" stroke="var(--border-strong)" strokeWidth="1" />
         <rect x="164" y="30" width="62" height="34" rx="5" fill="var(--surface)" stroke="var(--border-strong)" strokeWidth="1" />
         <rect x="236" y="30" width="62" height="34" rx="5" fill="var(--surface)" stroke="var(--border-strong)" strokeWidth="1" />
-        <path d="M100 54 h28" stroke="url(#bps-g)" strokeWidth="3" strokeLinecap="round" />
-        <path d="M172 54 h36 M244 54 h24" stroke="var(--dim)" strokeWidth="3" strokeLinecap="round" />
-        <rect x="140" y="37" width="8" height="6" rx="2" fill="var(--accent)" opacity="0.8" />
+        <rect x="102" y="39" width="20" height="4" rx="2" fill="var(--dim)" />
+        <rect x="174" y="39" width="20" height="4" rx="2" fill="var(--dim)" />
+        <rect x="246" y="39" width="20" height="4" rx="2" fill="var(--dim)" />
+        <path d="M128 43 l3 -4 l3 4 Z" fill="var(--accent)" />
+        <path d="M200 43 l3 -4 l3 4 Z" fill="var(--viz-purple)" />
+        <path d="M272 43 l3 -4 l3 4 Z" fill="var(--accent)" />
+        <text data-bp-counter data-count-min="1180" data-count-max="1440" data-count-sep="1" x="102" y="57" fontFamily={MONO} fontSize="13" fontWeight="600" fill="var(--text)">
+          1,284
+        </text>
+        <text data-bp-counter data-count-min="90" data-count-max="99" data-count-suffix="%" x="174" y="57" fontFamily={MONO} fontSize="13" fontWeight="600" fill="var(--text)">
+          96%
+        </text>
+        <text data-bp-counter data-count-min="28" data-count-max="72" data-count-suffix="k" x="246" y="57" fontFamily={MONO} fontSize="13" fontWeight="600" fill="var(--text)">
+          54k
+        </text>
+
+        {/* Ejes del chart */}
         <path d={`M${CHART.x} 108 V166 H296`} fill="none" stroke="var(--border-strong)" strokeWidth="1" />
+        <path d="M88 122 h4 M88 140 h4 M88 158 h4" stroke="var(--dim)" strokeWidth="1" strokeLinecap="round" />
+
+        {/* Chart en vivo: dos líneas comparadas (azul + morada) */}
         <g transform={`translate(${CHART.x},${CHART.y})`}>
-          <path d={AREA} fill="url(#bps-area)" />
-          <path data-bp-accent d={LINE} fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          <circle cx={END.x} cy={END.y} r="3" fill="var(--accent)" />
+          <g clipPath="url(#bps-chartclip)">
+            <g data-bp-linewrap>
+              <path data-bp-area data-line="b" d={AREA_B} fill="url(#bps-area-b)" />
+              <path data-bp-area data-line="a" d={AREA_A} fill="url(#bps-area-a)" />
+              <path data-bp-line data-line="b" d={LINE_B} fill="none" stroke="var(--viz-purple)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              <path data-bp-line data-line="a" d={LINE_A} fill="none" stroke="var(--accent)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </g>
+          </g>
         </g>
       </g>
 
@@ -77,7 +126,7 @@ export default function BlueprintSaas() {
         <path data-bp-draw d="M100 54 h28 M172 54 h36 M244 54 h24" />
         <path data-bp-draw d={`M${CHART.x} 108 V166 H296`} />
         <path data-bp-draw d="M88 122 h4 M88 140 h4 M88 158 h4" strokeWidth="1" />
-        <path data-bp-draw data-bp-chart d={LINE} transform={`translate(${CHART.x},${CHART.y})`} strokeLinejoin="round" />
+        <path data-bp-draw data-bp-chart d={LINE_A_VIS} transform={`translate(${CHART.x},${CHART.y})`} strokeLinejoin="round" />
         <g data-bp-dims strokeWidth="1" strokeOpacity="0.75">
           <path data-bp-draw d="M16 192 v-4 M304 192 v-4 M16 190 H304" />
           <path data-bp-draw d="M6 12 h8 M10 8 v8 M306 12 h8 M310 8 v8" strokeOpacity="0.5" />

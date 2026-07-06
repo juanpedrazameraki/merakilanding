@@ -10,6 +10,14 @@ const WIRE_API = 'M64 60 V88 H128';
 const WIRE_DB = 'M240 71 V100 H192';
 const WIRE_CRM = 'M64 140 V112 H128';
 const WIRE_PAY = 'M256 140 V112 H192';
+
+/* Rutas del "flujo de datos": mismas líneas pero trazadas del NODO CENTRAL
+   hacia afuera, para que el pulso salga del centro y viaje a cada sistema.
+   El orden del array = orden de emisión (API → PAY → DB → CRM). */
+const FLOW_API = 'M128 88 H64 V60';
+const FLOW_PAY = 'M192 112 H256 V140';
+const FLOW_DB = 'M192 100 H240 V71';
+const FLOW_CRM = 'M128 112 H64 V140';
 const PORTS =
   'M125.5 88 a2.5 2.5 0 1 0 5 0 a2.5 2.5 0 1 0 -5 0 M189.5 100 a2.5 2.5 0 1 0 5 0 a2.5 2.5 0 1 0 -5 0 M125.5 112 a2.5 2.5 0 1 0 5 0 a2.5 2.5 0 1 0 -5 0 M189.5 112 a2.5 2.5 0 1 0 5 0 a2.5 2.5 0 1 0 -5 0';
 const GLYPH = 'M150 94 l-7 6 7 6 M170 94 l7 6 -7 6 M164 92 l-8 20';
@@ -42,7 +50,7 @@ export default function BlueprintCustom() {
 
       <g data-bp-solid>
         <path d={WIRE_API} fill="none" stroke="var(--border-strong)" strokeWidth="1.5" />
-        <path data-bp-accent d={WIRE_DB} fill="none" stroke="var(--accent)" strokeWidth="1.5" />
+        <path d={WIRE_DB} fill="none" stroke="var(--border-strong)" strokeWidth="1.5" />
         <path d={WIRE_CRM} fill="none" stroke="var(--border-strong)" strokeWidth="1.5" />
         <path d={WIRE_PAY} fill="none" stroke="var(--border-strong)" strokeWidth="1.5" />
         <rect x="36" y="32" width="56" height="28" rx="6" fill="var(--card)" stroke="var(--border-strong)" strokeWidth="1" />
@@ -51,7 +59,7 @@ export default function BlueprintCustom() {
         <rect x="36" y="140" width="56" height="28" rx="6" fill="var(--card)" stroke="var(--border-strong)" strokeWidth="1" />
         <rect x="228" y="140" width="56" height="28" rx="6" fill="var(--card)" stroke="var(--border-strong)" strokeWidth="1" />
         <rect x={APP.x} y={APP.y} width={APP.w} height={APP.h} rx={APP.r} fill="var(--card)" stroke="var(--accent)" strokeWidth="1.5" />
-        <rect x={APP.x} y={APP.y} width={APP.w} height={APP.h} rx={APP.r} fill="url(#bpc-g)" opacity="0.12" />
+        <rect data-bp-breathe data-breathe-min="0.1" data-breathe-max="0.28" x={APP.x} y={APP.y} width={APP.w} height={APP.h} rx={APP.r} fill="url(#bpc-g)" opacity="0.12" />
         <path d={GLYPH} fill="none" stroke="var(--text)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
         <path d={PORTS} fill="var(--accent)" stroke="none" />
         <text x="64" y="50" fontFamily={MONO} fontSize="7.5" fill="var(--muted)" textAnchor="middle">
@@ -94,6 +102,15 @@ export default function BlueprintCustom() {
         <text data-bp-label x="160" y="142" fontFamily={MONO} fontSize="7" fill="var(--accent)" stroke="none" opacity="0.75" textAnchor="middle">
           64
         </text>
+      </g>
+
+      {/* Capa de flujo: pulsos de luz que viajan por cada cable (los anima
+          Services.tsx en bucle). pathLength=100 → el dash mide en % del cable. */}
+      <g data-bp-flowlayer fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path data-bp-flow pathLength={100} d={FLOW_API} />
+        <path data-bp-flow pathLength={100} d={FLOW_PAY} />
+        <path data-bp-flow pathLength={100} d={FLOW_DB} />
+        <path data-bp-flow pathLength={100} d={FLOW_CRM} />
       </g>
 
       <rect data-bp-scan x="0" y="0" width="28" height="200" fill="url(#bpc-scan)" opacity="0" />

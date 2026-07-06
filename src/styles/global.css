@@ -33,6 +33,7 @@ button {
   --border-strong: rgba(255, 255, 255, 0.17);
   --primary: #3b82f6;
   --accent: #22d3ee;
+  --viz-purple: #a78bfa;
   --grid: rgba(255, 255, 255, 0.05);
   --glow-1: rgba(37, 99, 235, 0.4);
   --glow-2: rgba(34, 211, 238, 0.24);
@@ -54,6 +55,7 @@ button {
   --border-strong: rgba(2, 6, 23, 0.17);
   --primary: #2563eb;
   --accent: #0e93b0;
+  --viz-purple: #7c3aed;
   --grid: rgba(2, 6, 23, 0.05);
   --glow-1: rgba(37, 99, 235, 0.16);
   --glow-2: rgba(34, 211, 238, 0.15);

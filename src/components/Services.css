@@ -27,6 +27,12 @@
   height: 100%;
 }
 
+/* Pulsos del "flujo de datos": un halo suave los hace leer como luz viva.
+   El movimiento (dash) lo controla GSAP en Services.tsx. */
+[data-bp-flow] {
+  filter: drop-shadow(0 0 2px var(--accent));
+}
+
 /* Chips de entregables */
 .mc-svc-chips {
   display: flex;

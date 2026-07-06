@@ -1,13 +1,136 @@
+/* ── Carrusel del portafolio ("casos de éxito — próximamente") ─────────────
+   Dos filas a todo el ancho que se desplazan en bucle infinito y en sentidos
+   opuestos. El truco de loop sin cortes: la pista contiene DOS tramos
+   idénticos y se anima translateX(0 → -50%), así el final calza con el inicio.
+   Ajusta la sensación con las variables de .mc-pf-rows.
+   ────────────────────────────────────────────────────────────────────────── */
+.mc-pf-rows {
+  --pf-card-w: clamp(210px, 60vw, 264px); /* ancho de cada card (responsive)        */
+  --pf-gap: clamp(12px, 2vw, 20px); /*        separación entre cards                 */
+  --pf-dur: 55s; /*                            vuelta de la fila 1  (↑ = más lento)   */
+  --pf-dur-2: 68s; /*                          vuelta de la fila 2  (distinta = orgánico) */
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2vw, 20px);
+}
+
+.mc-pf-row {
+  overflow: hidden;
+  padding: 8px 0; /* aire para el "lift" del hover sin que lo recorte el overflow */
+  /* Desvanece las cards en los bordes izquierdo/derecho */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.mc-pf-track {
+  display: flex;
+  width: max-content;
+  animation: mc-pf-marq var(--pf-dur) linear infinite;
+  will-change: transform;
+}
+.mc-pf-track--reverse {
+  animation-direction: reverse;
+} /* fila superior: izquierda → derecha */
+.mc-pf-track--slow {
+  animation-duration: var(--pf-dur-2);
+} /* fila inferior: derecha → izquierda, un poco más lenta */
+
+/* Pausa al pasar el mouse por encima (para poder leer una card) */
+.mc-pf-row:hover .mc-pf-track {
+  animation-play-state: paused;
+}
+
+@keyframes mc-pf-marq {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ── Card individual ── */
 .mc-pf-card {
+  flex: 0 0 var(--pf-card-w);
+  margin-right: var(--pf-gap);
   border: 1px solid var(--border);
   border-radius: 16px;
   overflow: hidden;
   background: var(--card);
   transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
 }
-
 .mc-pf-card:hover {
   transform: translateY(-5px);
   border-color: var(--border-strong);
   box-shadow: var(--shadow);
+}
+
+.mc-pf-thumb {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.3), rgba(34, 211, 238, 0.16));
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mc-pf-thumb-grid {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(135deg, var(--grid) 0 1px, transparent 1px 12px);
+}
+.mc-pf-thumb-glow {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.45), transparent 70%);
+  filter: blur(14px);
+}
+.mc-pf-thumb-icon {
+  position: relative;
+}
+.mc-pf-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(10, 10, 16, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  color: #fff;
+  text-transform: uppercase;
+}
+.mc-pf-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22d3ee;
+}
+.mc-pf-meta {
+  padding: 17px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.mc-pf-cat {
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+
+/* Sin movimiento si el usuario lo pidió: filas estáticas */
+@media (prefers-reduced-motion: reduce) {
+  .mc-pf-track {
+    animation: none;
+  }
 }
