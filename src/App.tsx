@@ -6,7 +6,7 @@ import Services from './components/Services';
 import Process from './components/Process';
 import Guarantees from './components/Guarantees';
 import StackSection from './components/StackSection';
-import Pricing from './components/Pricing';
+// import Pricing from './components/Pricing';
 import About from './components/About';
 import Faq from './components/Faq';
 import Contact from './components/Contact';
@@ -32,7 +32,7 @@ function Shell() {
         <Process />
         <Guarantees />
         <StackSection />
-        <Pricing />
+        {/* <Pricing /> */}
         <About />
         <Faq />
         <Contact />
