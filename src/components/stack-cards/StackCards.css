@@ -1,0 +1,138 @@
+/* ── Variante "cards" (tradicional, elegante) de la sección Tecnologías ──────
+   Reutiliza tokens del sistema (radios, sombras, superficies, --accent/--brand).
+   Interacción por hover en CSS; aparición al scroll vía [data-reveal]. */
+
+.mc-tc-caps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 22px auto 0;
+  max-width: 720px;
+}
+.mc-tc-cap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: border-color 0.25s, color 0.25s, background 0.25s;
+}
+.mc-tc-cap svg {
+  color: var(--accent);
+}
+.mc-tc-cap:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.mc-tc-groups {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(26px, 4vw, 40px);
+  margin-top: clamp(40px, 6vw, 64px);
+}
+.mc-tc-grouphead {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.mc-tc-grouptitle {
+  font-size: 1.06rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.mc-tc-groupline {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border-strong), transparent);
+}
+.mc-tc-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--dim);
+}
+
+.mc-tc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+.mc-tc-tile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 15px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  cursor: default;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1), border-color 0.25s, box-shadow 0.25s,
+    background 0.25s;
+}
+/* Halo sutil que sigue apareciendo al hover (tinte de marca) */
+.mc-tc-tile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 120% at 0% 0%, color-mix(in srgb, var(--brand) 12%, transparent), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.mc-tc-tile:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow);
+}
+.mc-tc-tile:hover::before {
+  opacity: 1;
+}
+.mc-tc-ico {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  transition: color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.mc-tc-tile:hover .mc-tc-ico {
+  color: var(--brand);
+  border-color: color-mix(in srgb, var(--brand) 45%, var(--border-strong));
+  box-shadow: 0 0 16px -4px color-mix(in srgb, var(--brand) 55%, transparent);
+}
+.mc-tc-body {
+  min-width: 0;
+}
+.mc-tc-name {
+  font-size: 0.94rem;
+  font-weight: 650;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.mc-tc-desc {
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+@media (max-width: 560px) {
+  .mc-tc-grid {
+    grid-template-columns: 1fr;
+  }
+}

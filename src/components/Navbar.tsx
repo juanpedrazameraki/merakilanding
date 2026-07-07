@@ -172,7 +172,7 @@ export default function Navbar() {
   const links = [
     { href: '#services', label: T.nav.services },
     { href: '#process', label: T.nav.process },
-    { href: '#portfolio', label: T.nav.portfolio },
+    { href: '#guarantees', label: T.nav.guarantees },
     { href: '#pricing', label: T.nav.pricing },
     { href: '#about', label: T.nav.about },
     { href: '#faq', label: T.nav.faq },

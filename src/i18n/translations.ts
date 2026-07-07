@@ -24,7 +24,7 @@ export interface Translation {
   nav: {
     services: string;
     process: string;
-    portfolio: string;
+    guarantees: string;
     pricing: string;
     about: string;
     faq: string;
@@ -72,6 +72,13 @@ export interface Translation {
     soon: string;
     items: { category: string }[];
   };
+  guarantees: {
+    eyebrow: string;
+    heading: string;
+    intro: string;
+    signature: string;
+    items: { title: string; desc: string }[];
+  };
   stack: {
     eyebrow: string;
     heading: string;
@@ -81,6 +88,20 @@ export interface Translation {
     frontend: string;
     backend: string;
     infra: string;
+    cmd: string;
+    resolving: string;
+    added: string;
+    versionsNote: string;
+    roles: {
+      react: string;
+      next: string;
+      typescript: string;
+      node: string;
+      tailwind: string;
+      docker: string;
+      postgresql: string;
+      python: string;
+    };
   };
   pricing: {
     eyebrow: string;
@@ -149,7 +170,7 @@ const es: Translation = {
   nav: {
     services: 'Servicios',
     process: 'Proceso',
-    portfolio: 'Portafolio',
+    guarantees: 'Compromiso',
     pricing: 'Precios',
     about: 'Nosotros',
     faq: 'FAQ',
@@ -228,6 +249,18 @@ const es: Translation = {
       { category: 'Integración / API' },
     ],
   },
+  guarantees: {
+    eyebrow: 'Nuestro compromiso',
+    heading: '¿Por qué confiar tu proyecto en nosotros?',
+    intro: 'Sabemos que elegir un socio tecnológico no es fácil. Por eso nuestra prioridad es que te sientas acompañado y con la tranquilidad de que tu proyecto está en buenas manos, desde el primer día.',
+    signature: 'Con dedicación, el equipo de MerakiCode',
+    items: [
+      { title: 'Comunicación constante', desc: 'Te mantenemos al tanto del avance en todo momento, en lenguaje claro y sin tecnicismos.' },
+      { title: 'Atención personalizada', desc: 'Trabajas de cerca con quien construye tu producto, no con intermediarios.' },
+      { title: 'Transparencia en cada etapa', desc: 'Alcance, tiempos y avances claros desde el inicio; siempre sabes en qué punto vamos.' },
+      { title: 'Acompañamiento post-lanzamiento', desc: 'No desaparecemos al entregar: te acompañamos en el arranque y los primeros ajustes.' },
+    ],
+  },
   stack: {
     eyebrow: 'Tecnologías',
     heading: 'Un stack moderno y probado',
@@ -237,6 +270,20 @@ const es: Translation = {
     frontend: 'Frontend',
     backend: 'Backend',
     infra: 'Infraestructura / DB',
+    cmd: 'npx create-meraki-app@latest',
+    resolving: 'resolviendo dependencias…',
+    added: '+ 8 paquetes añadidos en {t}s',
+    versionsNote: 'versiones ilustrativas',
+    roles: {
+      react: 'UI declarativa y veloz',
+      next: 'Framework full-stack',
+      typescript: 'Tipado estático',
+      node: 'Runtime de servidor',
+      tailwind: 'Estilos utility-first',
+      docker: 'Contenedores',
+      postgresql: 'Base de datos SQL',
+      python: 'Scripting y datos',
+    },
   },
   pricing: {
     eyebrow: 'Precios',
@@ -288,10 +335,9 @@ const es: Translation = {
     mission:
       'Somos un estudio de desarrollo de software enfocado en crear productos digitales con propósito. Combinamos ingeniería sólida, diseño cuidado y acompañamiento cercano para ayudar a startups y PYMEs a crecer.',
     team: [
-      { name: '{{NOMBRE 1}}', role: 'Co-fundador · Desarrollo' },
-      { name: '{{NOMBRE 2}}', role: 'Co-fundadora · Diseño / UX' },
-      { name: '{{NOMBRE 3}}', role: 'Desarrollo backend' },
-      { name: '{{NOMBRE 4}}', role: 'Proyectos y clientes' },
+      { name: 'Teresa Ramírez', role: 'Co-fundadora · Proyectos y Clientes' },
+      { name: 'Juan Pablo Alegría', role: 'Co-fundador · Desarrollo' },
+      { name: 'Juan Pedraza', role: 'Co-fundador · Desarrollo' },
     ],
   },
   faq: {
@@ -373,7 +419,7 @@ const en: Translation = {
   nav: {
     services: 'Services',
     process: 'Process',
-    portfolio: 'Portfolio',
+    guarantees: 'Commitment',
     pricing: 'Pricing',
     about: 'About',
     faq: 'FAQ',
@@ -452,6 +498,18 @@ const en: Translation = {
       { category: 'Integration / API' },
     ],
   },
+  guarantees: {
+    eyebrow: 'Our commitment',
+    heading: 'Why trust us with your project?',
+    intro: 'We know choosing a tech partner isn’t easy. That’s why our priority is that you feel supported and confident that your project is in good hands, from day one.',
+    signature: 'Made with dedication, the MerakiCode team',
+    items: [
+      { title: 'Constant communication', desc: 'We keep you updated on progress at all times, in clear language and no jargon.' },
+      { title: 'Personal attention', desc: 'You work directly with the people building your product, not middlemen.' },
+      { title: 'Transparency at every stage', desc: 'Clear scope, timelines and progress from the start; you always know where we stand.' },
+      { title: 'Post-launch support', desc: 'We don’t disappear at delivery: we support you through launch and the first tweaks.' },
+    ],
+  },
   stack: {
     eyebrow: 'Technologies',
     heading: 'A modern, proven stack',
@@ -461,6 +519,20 @@ const en: Translation = {
     frontend: 'Frontend',
     backend: 'Backend',
     infra: 'Infrastructure / DB',
+    cmd: 'npx create-meraki-app@latest',
+    resolving: 'resolving dependencies…',
+    added: '+ added 8 packages in {t}s',
+    versionsNote: 'illustrative versions',
+    roles: {
+      react: 'Fast declarative UI',
+      next: 'Full-stack framework',
+      typescript: 'Static typing',
+      node: 'Server runtime',
+      tailwind: 'Utility-first styling',
+      docker: 'Containers',
+      postgresql: 'SQL database',
+      python: 'Scripting & data',
+    },
   },
   pricing: {
     eyebrow: 'Pricing',
@@ -512,10 +584,9 @@ const en: Translation = {
     mission:
       "We're a software development studio focused on building purposeful digital products. We combine solid engineering, thoughtful design and close support to help startups and SMBs grow.",
     team: [
-      { name: '{{NAME 1}}', role: 'Co-founder · Development' },
-      { name: '{{NAME 2}}', role: 'Co-founder · Design / UX' },
-      { name: '{{NAME 3}}', role: 'Backend development' },
-      { name: '{{NAME 4}}', role: 'Projects & clients' },
+      { name: 'Teresa Ramírez', role: 'Co-founder · Projects & Clients' },
+      { name: 'Juan Pablo Alegría', role: 'Co-founder · Development' },
+      { name: 'Juan Pedraza', role: 'Co-founder · Development' },
     ],
   },
   faq: {

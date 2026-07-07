@@ -1,10 +1,16 @@
-import type { CSSProperties } from 'react';
-import { useSite } from '../context/SiteContext';
-import StackViz from './StackViz';
+import StackTerminal from './StackTerminal';
+import StackCards from './stack-cards/StackCards';
+import StackArchitecture from './stack-arch/StackArchitecture';
+
+type View = 'terminal' | 'cards' | 'arch';
+
+/* Shell de la sección Tecnologías.
+   La versión mostrada la fija el owner (NO el cliente). Hoy: 'arch'.
+   Terminal y Cards se conservan listos para cambiar en el futuro: basta
+   cambiar el valor de VIEW por 'terminal' o 'cards'. */
+const VIEW: View = 'arch';
 
 export default function StackSection() {
-  const { T } = useSite();
-
   return (
     <section
       id="stack"
@@ -32,6 +38,7 @@ export default function StackSection() {
           pointerEvents: 'none',
         }}
       ></div>
+
       <div
         style={{
           position: 'relative',
@@ -41,87 +48,9 @@ export default function StackSection() {
           padding: '0 clamp(16px,4vw,24px)',
         }}
       >
-        <div className="mc-stackwrap" style={{ position: 'relative' }}>
-          <div
-            className="mc-stackcenter"
-            style={{
-              position: 'absolute',
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%,-50%)',
-              zIndex: 15,
-              width: 'min(460px,82%)',
-              textAlign: 'center',
-              pointerEvents: 'none',
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "'JetBrains Mono',monospace",
-                fontSize: '.76rem',
-                letterSpacing: '.18em',
-                textTransform: 'uppercase',
-                color: 'var(--accent)',
-                marginBottom: '16px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '11px',
-              }}
-            >
-              <span
-                aria-hidden="true"
-                style={{
-                  width: '22px',
-                  height: '1px',
-                  background: 'var(--accent)',
-                  display: 'inline-block',
-                }}
-              ></span>
-              {T.stack.eyebrow}
-            </div>
-            <h2
-              style={
-                {
-                  fontSize: 'clamp(1.7rem,3.2vw,2.5rem)',
-                  fontWeight: 800,
-                  letterSpacing: '-.025em',
-                  lineHeight: 1.08,
-                  margin: '0 0 16px',
-                  textWrap: 'balance',
-                  color: 'var(--text)',
-                } as CSSProperties
-              }
-            >
-              {T.stack.coreLead}
-              <span
-                style={{
-                  background: 'linear-gradient(120deg,var(--g1),var(--g2))',
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text',
-                  color: 'transparent',
-                }}
-              >
-                {T.stack.coreHi}
-              </span>
-            </h2>
-            <p
-              style={
-                {
-                  fontSize: 'clamp(.96rem,1.2vw,1.08rem)',
-                  color: 'var(--muted)',
-                  lineHeight: 1.6,
-                  margin: '0 auto',
-                  maxWidth: '38ch',
-                  textWrap: 'pretty',
-                } as CSSProperties
-              }
-            >
-              {T.stack.sub}
-            </p>
-          </div>
-          <StackViz />
-        </div>
+        {VIEW === 'terminal' && <StackTerminal />}
+        {VIEW === 'cards' && <StackCards />}
+        {VIEW === 'arch' && <StackArchitecture />}
       </div>
     </section>
   );

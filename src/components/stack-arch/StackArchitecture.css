@@ -1,0 +1,944 @@
+/* ── Variante 3 — "Arquitectura interactiva" ─────────────────────────────────
+   Sistema de estilos de la sección: selector de proyecto, diagrama de capas
+   con conexiones animadas, simulación de flujo, stack por categorías, casos,
+   beneficios y CTA. Reutiliza tokens del proyecto (radios, sombras, --accent,
+   --brand, superficies). Animaciones sutiles; el bloque global de
+   prefers-reduced-motion (global.css) apaga los keyframes CSS. */
+
+.mc-arch {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(44px, 6vw, 76px);
+}
+
+/* Bloque contenedor reutilizable (tarjetón grande, como en la referencia) */
+.mc-arch-block {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  padding: clamp(20px, 3vw, 32px);
+}
+.mc-arch-blockhead {
+  margin-bottom: clamp(18px, 2.4vw, 26px);
+}
+.mc-arch-blocktitle {
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 0;
+}
+.mc-arch-blocksub {
+  margin: 8px 0 0;
+  font-size: 0.96rem;
+  line-height: 1.55;
+  color: var(--muted);
+  max-width: 62ch;
+}
+
+/* Badges de capacidad del encabezado */
+.mc-arch-caps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 22px auto 0;
+  max-width: 760px;
+}
+.mc-arch-cap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.mc-arch-cap svg {
+  color: var(--accent);
+}
+
+/* ── Bloque principal: sidebar + panel ─────────────────────────────────────── */
+.mc-arch-main {
+  display: grid;
+  grid-template-columns: minmax(220px, 260px) 1fr;
+  gap: clamp(16px, 2vw, 22px);
+  align-items: start;
+}
+
+/* Sidebar: selector de tipo de proyecto */
+.mc-arch-side {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  padding: 18px;
+  position: sticky;
+  top: 90px;
+}
+.mc-arch-side-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 4px;
+}
+.mc-arch-side-sub {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--muted);
+  margin: 0 0 16px;
+}
+.mc-arch-side-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.mc-arch-side-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+}
+.mc-arch-side-item:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+.mc-arch-side-item svg {
+  flex-shrink: 0;
+  color: var(--dim);
+  transition: color 0.2s;
+}
+.mc-arch-side-item.is-active {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--g1), var(--g2));
+  box-shadow: 0 14px 30px -14px rgba(34, 211, 238, 0.7);
+}
+.mc-arch-side-item.is-active svg {
+  color: #fff;
+}
+.mc-arch-advise {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.mc-arch-advise p {
+  margin: 0 0 12px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.mc-arch-advise-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 11px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.86rem;
+  transition: border-color 0.2s, background 0.2s;
+}
+.mc-arch-advise-btn:hover {
+  border-color: var(--accent);
+}
+
+/* Panel de arquitectura */
+.mc-arch-panel {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--card) 55%, transparent);
+  padding: clamp(16px, 2vw, 24px);
+  overflow: hidden;
+}
+.mc-arch-panelhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.mc-arch-panelhead h4 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.mc-arch-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border-strong));
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+/* Rejilla de columnas: cliente + 4 capas, con conectores intercalados */
+.mc-arch-grid {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+}
+.mc-arch-col {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.mc-arch-colhead {
+  text-align: center;
+  margin-bottom: 12px;
+  min-height: 52px;
+}
+.mc-arch-collabel {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+}
+.mc-arch-colrole {
+  font-size: 0.72rem;
+  line-height: 1.3;
+  color: var(--dim);
+  display: block;
+  margin-top: 4px;
+}
+.mc-arch-colbody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+/* Nodo cliente (columna izquierda) */
+.mc-arch-client {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+  min-height: 120px;
+  padding: 16px 10px;
+  border-radius: 14px;
+  border: 1px dashed var(--border-strong);
+  background: var(--surface);
+  color: var(--muted);
+  text-align: center;
+}
+.mc-arch-client strong {
+  color: var(--text);
+  font-size: 0.9rem;
+}
+.mc-arch-client span {
+  font-size: 0.72rem;
+  color: var(--dim);
+}
+
+/* Tarjeta de tecnología dentro de una capa */
+.mc-arch-tech {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 11px;
+  border-radius: 11px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  cursor: default;
+  transition: transform 0.2s, border-color 0.2s, background 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+.mc-arch-tech .mc-arch-tech-ico {
+  flex-shrink: 0;
+  color: var(--muted);
+  display: flex;
+  transition: color 0.2s;
+}
+.mc-arch-tech-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.22;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.mc-arch-tech:hover,
+.mc-arch-tech.is-hot {
+  border-color: color-mix(in srgb, var(--brand) 55%, var(--border-strong));
+  background: color-mix(in srgb, var(--brand) 10%, var(--card));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand) 40%, transparent);
+  transform: translateY(-1px);
+}
+.mc-arch-tech:hover .mc-arch-tech-ico,
+.mc-arch-tech.is-hot .mc-arch-tech-ico {
+  color: var(--brand);
+}
+/* Atenuar lo no relacionado cuando hay un tech "caliente" */
+.mc-arch-grid.is-focusing .mc-arch-tech:not(.is-hot) {
+  opacity: 0.4;
+}
+
+/* Conectores entre columnas */
+.mc-arch-conn {
+  flex: 0 0 22px;
+  align-self: center;
+  position: relative;
+  height: 2px;
+  margin-top: 40px; /* baja un poco para cruzar la zona de tarjetas, no el header */
+  background-image: linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 12px);
+  background-size: 12px 2px;
+  border-radius: 2px;
+}
+/* (conector = solo línea punteada estática; sin punto animado, a pedido) */
+
+/* Footer de monitoreo dentro del panel */
+.mc-arch-monitor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px dashed var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.mc-arch-monitor svg {
+  color: var(--accent);
+}
+
+/* ── Simulación de flujo ───────────────────────────────────────────────────── */
+.mc-arch-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.mc-arch-flow-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  align-self: flex-start;
+  padding: 11px 18px;
+  border-radius: 11px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+.mc-arch-flow-btn:hover {
+  border-color: var(--accent);
+  background: var(--surface-2);
+}
+.mc-arch-flow-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.mc-arch-flow-btn svg {
+  color: var(--accent);
+}
+.mc-arch-flow-track {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  position: relative;
+}
+.mc-arch-flow-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  position: relative;
+}
+/* Línea base que conecta los nodos */
+.mc-arch-flow-node::before {
+  content: '';
+  position: absolute;
+  top: 26px;
+  left: -50%;
+  width: 100%;
+  height: 2px;
+  background: var(--border-strong);
+  z-index: 0;
+}
+.mc-arch-flow-node:first-child::before {
+  display: none;
+}
+.mc-arch-flow-node.is-lit::before {
+  background: linear-gradient(90deg, var(--g1), var(--g2));
+  box-shadow: 0 0 10px -1px var(--accent);
+}
+.mc-arch-flow-ico {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: var(--card);
+  color: var(--dim);
+  transition: color 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.3s, background 0.3s;
+}
+.mc-arch-flow-node.is-active .mc-arch-flow-ico {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--g1), var(--g2));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent),
+    0 12px 28px -10px rgba(34, 211, 238, 0.8);
+  transform: scale(1.06);
+}
+.mc-arch-flow-node.is-done .mc-arch-flow-ico {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border-strong));
+}
+.mc-arch-flow-step {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  color: var(--dim);
+}
+.mc-arch-flow-name {
+  font-size: 0.9rem;
+  font-weight: 650;
+  color: var(--text);
+}
+.mc-arch-flow-desc {
+  font-size: 0.76rem;
+  line-height: 1.4;
+  color: var(--muted);
+  min-height: 3.2em;
+  opacity: 0.35;
+  transition: opacity 0.3s;
+}
+.mc-arch-flow-node.is-active .mc-arch-flow-desc,
+.mc-arch-flow-node.is-done .mc-arch-flow-desc {
+  opacity: 1;
+}
+
+/* ── Stack detallado por categoría ─────────────────────────────────────────── */
+.mc-arch-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.mc-arch-tab {
+  padding: 8px 15px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+.mc-arch-tab:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+.mc-arch-tab.is-active {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--g1), var(--g2));
+}
+.mc-arch-chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+.mc-arch-chip {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 13px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  cursor: default;
+  transition: transform 0.2s, border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.mc-arch-chip .mc-arch-chip-ico {
+  color: var(--muted);
+  display: flex;
+  transition: color 0.2s;
+}
+.mc-arch-chip-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.mc-arch-chip:hover,
+.mc-arch-chip:focus-visible {
+  outline: none;
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--brand) 55%, var(--border-strong));
+  background: color-mix(in srgb, var(--brand) 9%, var(--card));
+  box-shadow: var(--shadow);
+}
+.mc-arch-chip:hover .mc-arch-chip-ico,
+.mc-arch-chip:focus-visible .mc-arch-chip-ico {
+  color: var(--brand);
+}
+.mc-arch-chip-tip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translate(-50%, 4px);
+  white-space: nowrap;
+  font-size: 0.72rem;
+  color: var(--muted);
+  background: var(--nav-bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 5px 11px;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 6;
+  transition: opacity 0.22s, transform 0.22s;
+}
+.mc-arch-chip:hover .mc-arch-chip-tip,
+.mc-arch-chip:focus-visible .mc-arch-chip-tip {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+/* Botón "Mostrar más / menos" (solo mobile) */
+.mc-arch-more {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  margin: 16px auto 0;
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.mc-arch-more:hover {
+  border-color: var(--accent);
+  background: var(--surface-2);
+}
+/* Mobile: herramientas en 2 columnas para no ocupar tanto alto */
+@media (max-width: 620px) {
+  .mc-arch-chips {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .mc-arch-chip {
+    min-width: 0;
+    padding: 9px 10px;
+    gap: 8px;
+  }
+  .mc-arch-chip-name {
+    min-width: 0;
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* ── Casos de uso / proyectos ──────────────────────────────────────────────── */
+.mc-arch-projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 16px;
+}
+.mc-arch-proj {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+  overflow: hidden;
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+}
+.mc-arch-proj:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow);
+}
+.mc-arch-proj-thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-bottom: 1px solid var(--border);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--g1) 22%, transparent), color-mix(in srgb, var(--g2) 16%, transparent)),
+    var(--surface);
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+}
+.mc-arch-proj-thumb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity: 0.5;
+  -webkit-mask-image: radial-gradient(70% 70% at 50% 50%, #000, transparent);
+  mask-image: radial-gradient(70% 70% at 50% 50%, #000, transparent);
+}
+.mc-arch-proj-tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: var(--nav-bg);
+  color: var(--muted);
+}
+.mc-arch-proj-body {
+  padding: 16px 18px 18px;
+}
+.mc-arch-proj-title {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+.mc-arch-proj-desc {
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+.mc-arch-proj-techs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.mc-arch-proj-tech {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+}
+
+/* ── Beneficios — "Liquid Glass" (WWDC 2025) ─────────────────────────────────
+   Cristal real: desenfoque + refracción (filtro SVG feDisplacementMap),
+   reflejo que sigue el cursor, brillo superior, borde blanco tenue, sombra
+   difusa y destello que recorre la superficie al hover. Grilla simétrica 3×2.
+   Perillas: GLASS_BLUR (backdrop-filter), la escala del filtro #mc-liquid en
+   ArchExtras.tsx (scale=16) y las opacidades de brillo/reflejo de abajo. */
+.mc-glass-field {
+  position: relative;
+  border-radius: 24px;
+  padding: 20px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card) 45%, transparent);
+}
+/* Manchas de color detrás del cristal: le dan algo QUÉ refractar/reflejar */
+.mc-glass-field::before,
+.mc-glass-field::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(64px);
+  pointer-events: none;
+  z-index: 0;
+}
+.mc-glass-field::before {
+  width: 46%;
+  height: 72%;
+  left: -6%;
+  top: -22%;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.5), transparent 70%);
+}
+.mc-glass-field::after {
+  width: 52%;
+  height: 82%;
+  right: -8%;
+  bottom: -32%;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.42), rgba(167, 139, 250, 0.24) 58%, transparent 76%);
+}
+.mc-glass-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.mc-glass {
+  position: relative;
+  border-radius: 22px;
+  padding: 26px 22px;
+  min-height: 168px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
+  box-shadow:
+    0 24px 55px -26px rgba(0, 0, 0, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -20px 42px -32px rgba(0, 0, 0, 0.6);
+  transition:
+    transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+  will-change: transform;
+}
+/* Capa de cristal: desenfoque + saturación + refracción del fondo */
+.mc-glass-refract {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(7px) saturate(165%) url(#mc-liquid);
+  backdrop-filter: blur(7px) saturate(165%) url(#mc-liquid);
+}
+/* Brillo superior (specular highlight) */
+.mc-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 42%);
+  opacity: 0.75;
+}
+/* Reflejo que sigue el cursor */
+.mc-glass-glow {
+  position: absolute;
+  inset: -1px;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, 0.2), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+/* Destello que recorre la superficie al hover */
+.mc-glass-sweep {
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: -60%;
+  width: 42%;
+  z-index: 2;
+  pointer-events: none;
+  transform: skewX(-16deg);
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+  opacity: 0;
+}
+.mc-glass-inner {
+  position: relative;
+  z-index: 3;
+}
+.mc-glass-ico {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  margin-bottom: 16px;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.mc-glass-inner h5 {
+  margin: 0 0 7px;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.mc-glass-inner p {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+/* Hover: el cristal "sobresale", el borde cambia y el destello recorre */
+.mc-glass:hover {
+  transform: translateY(-7px) scale(1.02);
+  border-color: rgba(34, 211, 238, 0.42);
+  box-shadow:
+    0 42px 82px -30px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(34, 211, 238, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    inset 0 -20px 42px -32px rgba(0, 0, 0, 0.5);
+}
+.mc-glass:hover .mc-glass-glow {
+  opacity: 1;
+}
+.mc-glass:hover .mc-glass-sweep {
+  animation: mc-glass-sweep 0.95s ease;
+}
+@keyframes mc-glass-sweep {
+  0% { left: -60%; opacity: 0; }
+  20% { opacity: 1; }
+  100% { left: 120%; opacity: 0; }
+}
+
+@media (max-width: 900px) {
+  .mc-glass-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 560px) {
+  .mc-glass-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── CTA ───────────────────────────────────────────────────────────────────── */
+.mc-arch-cta {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border-strong));
+  border-radius: 20px;
+  padding: clamp(26px, 4vw, 44px);
+  background:
+    radial-gradient(80% 120% at 0% 0%, rgba(37, 99, 235, 0.16), transparent 60%),
+    radial-gradient(80% 120% at 100% 100%, rgba(34, 211, 238, 0.14), transparent 60%),
+    var(--card);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.mc-arch-cta-title {
+  font-size: clamp(1.25rem, 2.4vw, 1.7rem);
+  font-weight: 780;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+.mc-arch-cta-sub {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.98rem;
+  max-width: 46ch;
+}
+.mc-arch-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, var(--g1), var(--g2));
+  color: #fff;
+  text-decoration: none;
+  font-weight: 650;
+  font-size: 1rem;
+  white-space: nowrap;
+  box-shadow: 0 16px 38px -14px rgba(34, 211, 238, 0.8);
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+.mc-arch-cta-btn:hover {
+  box-shadow: 0 22px 48px -14px rgba(34, 211, 238, 0.98);
+  transform: translateY(-2px);
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────────── */
+@media (max-width: 980px) {
+  .mc-arch-main {
+    grid-template-columns: 1fr;
+  }
+  .mc-arch-side {
+    position: static;
+  }
+  .mc-arch-side-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .mc-arch-side-item {
+    width: auto;
+    flex: 1 1 140px;
+  }
+}
+@media (max-width: 760px) {
+  /* El diagrama pasa a apilado vertical */
+  .mc-arch-grid {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .mc-arch-conn {
+    flex: none;
+    width: 2px;
+    height: 20px;
+    margin: 0 auto;
+    background-image: linear-gradient(180deg, var(--border-strong) 0 6px, transparent 6px 12px);
+    background-size: 2px 12px;
+  }
+  .mc-arch-colhead {
+    min-height: 0;
+    margin-bottom: 8px;
+  }
+  .mc-arch-client {
+    min-height: 0;
+  }
+  .mc-arch-flow-track {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .mc-arch-flow-node {
+    flex-direction: row;
+    text-align: left;
+    gap: 14px;
+    padding: 4px 0;
+  }
+  .mc-arch-flow-node::before {
+    display: none;
+  }
+  .mc-arch-flow-body {
+    flex: 1;
+  }
+  .mc-arch-flow-desc {
+    min-height: 0;
+  }
+}

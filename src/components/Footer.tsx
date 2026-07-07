@@ -140,8 +140,8 @@ export default function Footer() {
               <a href="#process" className="mc-foot-link">
                 {T.nav.process}
               </a>
-              <a href="#portfolio" className="mc-foot-link">
-                {T.nav.portfolio}
+              <a href="#guarantees" className="mc-foot-link">
+                {T.nav.guarantees}
               </a>
               <a href="#pricing" className="mc-foot-link">
                 {T.nav.pricing}

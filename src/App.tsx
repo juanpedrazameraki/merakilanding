@@ -4,7 +4,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Services from './components/Services';
 import Process from './components/Process';
-import Portfolio from './components/Portfolio';
+import Guarantees from './components/Guarantees';
 import StackSection from './components/StackSection';
 import Pricing from './components/Pricing';
 import About from './components/About';
@@ -30,7 +30,7 @@ function Shell() {
         <Hero />
         <Services />
         <Process />
-        <Portfolio />
+        <Guarantees />
         <StackSection />
         <Pricing />
         <About />
