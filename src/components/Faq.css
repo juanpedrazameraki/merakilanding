@@ -3,9 +3,82 @@
   border-radius: 14px;
   background: var(--card);
   overflow: hidden;
-  transition: border-color 0.2s;
+  transition: border-color 0.25s ease, background 0.25s ease;
 }
 
 .mc-faq-row:hover {
   border-color: var(--border-strong);
+}
+.mc-faq-row.is-open {
+  border-color: var(--border-strong);
+  background: color-mix(in srgb, var(--accent) 4%, var(--card));
+}
+
+/* Ícono +/− que morfa suave: la barra vertical se colapsa al abrir */
+.mc-faq-ico {
+  position: relative;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+.mc-faq-row.is-open .mc-faq-ico {
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--border-strong));
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+}
+.mc-faq-ico-bar {
+  position: absolute;
+  width: 12px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  transition: transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.mc-faq-ico-bar--v {
+  transform: rotate(90deg);
+}
+.mc-faq-row.is-open .mc-faq-ico-bar--v {
+  transform: rotate(90deg) scaleX(0);
+}
+
+/* Respuesta: expandir/colapsar suave con grid-template-rows (0fr → 1fr) */
+.mc-faq-ans {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.mc-faq-row.is-open .mc-faq-ans {
+  grid-template-rows: 1fr;
+}
+.mc-faq-ans-inner {
+  overflow: hidden;
+}
+.mc-faq-ans-content {
+  padding: 0 22px 20px;
+  color: var(--muted);
+  font-size: 0.96rem;
+  line-height: 1.65;
+  max-width: 64ch;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.3s ease, transform 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.mc-faq-row.is-open .mc-faq-ans-content {
+  opacity: 1;
+  transform: none;
+}
+
+/* Respeta la preferencia de menos movimiento: cambio de estado instantáneo */
+@media (prefers-reduced-motion: reduce) {
+  .mc-faq-ans,
+  .mc-faq-ans-content,
+  .mc-faq-ico-bar {
+    transition: none;
+  }
 }

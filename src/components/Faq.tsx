@@ -63,7 +63,7 @@ export default function Faq() {
           {T.faq.items.map((row, i) => {
             const isOpen = openFaq === i;
             return (
-              <div key={i} data-reveal="" className="mc-faq-row">
+              <div key={i} data-reveal="" className={`mc-faq-row${isOpen ? ' is-open' : ''}`}>
                 <button
                   type="button"
                   onClick={() => toggleFaq(i)}
@@ -87,64 +87,16 @@ export default function Faq() {
                   }}
                 >
                   <span>{row.q}</span>
-                  <span
-                    aria-hidden="true"
-                    style={{
-                      flexShrink: 0,
-                      width: '26px',
-                      height: '26px',
-                      borderRadius: '7px',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      background: 'var(--surface)',
-                      border: '1px solid var(--border)',
-                      color: 'var(--accent)',
-                    }}
-                  >
-                    {isOpen && (
-                      <svg
-                        viewBox="0 0 24 24"
-                        width="15"
-                        height="15"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M5 12h14"></path>
-                      </svg>
-                    )}
-                    {!isOpen && (
-                      <svg
-                        viewBox="0 0 24 24"
-                        width="15"
-                        height="15"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M12 5v14M5 12h14"></path>
-                      </svg>
-                    )}
+                  <span className="mc-faq-ico" aria-hidden="true">
+                    <span className="mc-faq-ico-bar"></span>
+                    <span className="mc-faq-ico-bar mc-faq-ico-bar--v"></span>
                   </span>
                 </button>
-                {isOpen && (
-                  <div
-                    style={{
-                      padding: '0 22px 20px',
-                      color: 'var(--muted)',
-                      fontSize: '.96rem',
-                      lineHeight: 1.65,
-                      maxWidth: '64ch',
-                    }}
-                  >
-                    {row.a}
+                <div className="mc-faq-ans">
+                  <div className="mc-faq-ans-inner">
+                    <div className="mc-faq-ans-content">{row.a}</div>
                   </div>
-                )}
+                </div>
               </div>
             );
           })}
